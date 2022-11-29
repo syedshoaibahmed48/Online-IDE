@@ -1,0 +1,30 @@
+.App{
+display:flex;
+flex-direction: row;
+}
+
+#inputDiv{
+margin-left: 70px;
+margin-right: 40px;
+}
+
+#outputDiv{
+  margin-top: 115px;
+}
+
+#options{
+  display: flex;
+  flex-direction: row;
+}
+
+h2{
+  margin:0px;
+}
+
+textarea{
+  font-size:x-large;
+}
+
+button{
+  margin-left: 50px;
+}
