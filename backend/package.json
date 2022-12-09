@@ -5,14 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "nodemon index.js --ignore './CodeFiles/*'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bull": "^4.10.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "mongoose": "^6.8.0",
     "uuid": "^9.0.0"
   }
 }
