@@ -33,10 +33,10 @@ in cmd, enter below commands and wnter password whenever needed
 
 (optional)     
 To access redis cli: **redis-cli**     
-To stop redis server **sudo service redis-server stop**      
+To stop redis server **sudo service redis-server stop**   
      
         
-#### <ins>2.To server and frontend</ins>
+#### <ins>2.To run server and frontend</ins>
 in vscode, open folder Online_IDE, open two terminals    
 in terminal-1   
 **cd frontend && npm start**     

@@ -1,6 +1,6 @@
 const Queue=require('bull');
 const Job = require('./Models/Job');
-const {executeCode} = require('./CodeExecutionSystem/executeCode');
+const {executeCode} = require('./executeCode');
 const NumWorkers=5;
 const jobQueue = new Queue("job-queue");
 
