@@ -3,7 +3,7 @@ const cors=require('cors');
 const mongoose=require('mongoose');
 const {generateCodeFile}=require('./CodeExecutionSystem/generateCodeFile');
 const {AddJobToQueue} = require('./CodeExecutionSystem/jobQueue');
-const Job=require('./CodeExecutionSystem/Models/Job');//no curly braces coz job is default export in job.js
+const Job=require('./Models/Job');//no curly braces coz job is default export in job.js
 const port=5000;
 
 mongoose.connect('mongodb://127.0.0.1/Online_IDE_DB',(err)=>{

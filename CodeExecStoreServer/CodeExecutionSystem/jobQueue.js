@@ -1,8 +1,8 @@
 const Queue=require('bull');
-const Job = require('./Models/Job');
+const Job = require('../Models/Job');
 const {executeCode} = require('./executeCode');
 const NumWorkers=5;
-const jobQueue = new Queue("job-queue");
+const jobQueue = new Queue("jobQueue");
 
 jobQueue.process(NumWorkers, async ({data})=>{
     const {id: jobId}=data;
@@ -17,7 +17,7 @@ jobQueue.process(NumWorkers, async ({data})=>{
     job["status"]='success';
     job['output']=output;
     await job.save();//updating document in db
-    return true;
+    return true; 
 } catch(err){
     console.log(err);
 }
