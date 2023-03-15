@@ -39,10 +39,10 @@ To stop redis server **sudo service redis-server stop**
 #### <ins>2.To run server and frontend</ins>
 in vscode, open folder Online_IDE, open two terminals    
 in terminal-1   
-**cd frontend && npm start**     
+**cd client && npm run dev**     
 in terminal-2    
-**cd backend && npm start**   
-(to close) **CTRL+C**, and then **y** when prompted.
+**cd codeexecstoreserver && npm start**   
+(to close) **CTRL+C**, and then **y** if prompted.     
 
 #### <ins>3.To view Database using MongoDB compass</ins>
 using mongodb compass connect to DB using below connection string     

@@ -1,0 +1,84 @@
+.main{
+  background-color: rgb(44, 44, 44);
+  color: aliceblue;
+  position:absolute;
+  top:0px;
+  right:0px;
+  bottom:0px;
+  left:0px;
+}
+
+.navbar{
+  background-color: rgb(24, 24, 25);
+  height: 60px;
+}
+
+.navbar-brand{
+  font-size: 40px !important; 
+  font-weight: bold;
+  font-family: Raleway;
+}
+
+.dropdown-toggle{
+  background-color: inherit;
+  border: 5px solid grey;
+  width: 150px;
+  height: 40px;
+}
+
+.dropdown-toggle::after{
+  float: right;
+  margin-top: 10px;
+  margin-left: 0px;
+}
+
+.selectedOption{
+  margin-right: 0px;
+  float: left;
+}
+
+.image{
+  float: left;
+  margin-right: 10px;
+}
+
+.componentsDiv{
+  display: flex;
+  flex-direction: row;
+}
+
+.CodeMirror{
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+.codeEditorDiv{
+  padding: 10px;
+  margin-inline: 10px;
+}
+
+.codeEditorDiv .CodeMirror{
+  margin-top: 5px;
+  height: 590px;
+  width: 750px;
+}
+
+.ioDiv{
+  margin-top: 10px;
+}
+
+.outputDiv .CodeMirror{
+  height: 300px;
+  width: 565px;
+}
+
+.spinner-border{
+  width: 30px !important;
+  height: 30px !important;
+  margin-top: 7px;
+}
+
+.inputDiv .CodeMirror{
+  height: 240px;
+  width: 565px;
+}

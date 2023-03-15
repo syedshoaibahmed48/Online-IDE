@@ -62,10 +62,12 @@ const CodeEditorPage = () =>{
     };
 
     const DisplayLogo=(props) => {
-      return <img src={require(`../Images/${props.language}.png`)} alt='logo'
+
+      return <img src={ new URL (`../assets/${props.language}.png`, import.meta.url)} alt='logo' //new URL is used to get the path of the image
               className="image" 
               height={(props.language==='c'||props.language==='cpp')?30:25} 
-              width={(props.language==='c'||props.language==='cpp')?30:25} />;
+              width={(props.language==='c'||props.language==='cpp')?30:25}
+            />;
     }
 
 
