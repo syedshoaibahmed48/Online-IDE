@@ -1,12 +1,16 @@
+const dotenv=require('dotenv');
 const express=require('express');
 const cors=require('cors');
 const mongoose=require('mongoose');
 const {generateCodeFile}=require('./CodeExecutionSystem/generateCodeFile');
 const {AddJobToQueue} = require('./CodeExecutionSystem/jobQueue');
 const Job=require('./Models/Job');//no curly braces coz job is default export in job.js
-const port=5000;
 
-mongoose.connect('mongodb://127.0.0.1/Online_IDE_DB',(err)=>{
+dotenv.config({path: './.env'});//to load environment variables from a .env file into process.env
+
+const port = process.env.PORT;//port number
+
+mongoose.connect(process.env.DATABASE,(err)=>{
     if(err) console.error(err);
     else console.log("Successfully connected to the Database");
 });
@@ -20,7 +24,11 @@ app.use(cors());//to handle cors(cross origin resource sharing) error
 
 app.use(express.urlencoded({extended: true}));//middleware that only parses urlencoded bodies
 
-app.post('/run', async (req,res)=>{//this code handles post request to '/run' route
+app.get('/', (req, res)=>{//this code handles get request to '/' route
+    res.status(200).json({success:true, message:"Code Execution Store Server is up and running"});
+});
+
+app.post('/execute', async (req,res)=>{//this code handles post request to '/execute' route
     const {language, code, inputs}=req.body;
     try{
         const filePath=await generateCodeFile(language, code);//to generate code file

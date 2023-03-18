@@ -20,8 +20,8 @@ in vscode, open folder repos, open terminal and write below command
      
 ### Step-3: Installing node packages
 in vscode, open folder Online_IDE, open terminal and write below commands in sequence
-1. **cd backend && npm install**
-2. **cd .. && cd frontend && npm install npm install**
+1. **cd client && npm install**
+2. **cd .. && cd codeexecstoreserver && npm install npm install**
 
 
 ### Step-4: Running the Application
@@ -34,6 +34,7 @@ in cmd, enter below commands and wnter password whenever needed
 (optional)     
 To access redis cli: **redis-cli**     
 To stop redis server **sudo service redis-server stop**   
+to empty redis db: **FLUSHDB**
      
         
 #### <ins>2.To run server and frontend</ins>

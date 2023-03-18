@@ -21,7 +21,7 @@ const CodeEditorPage = () =>{
     const [option, setOption] = useState('C');
 
 
-    const runCode= async () => {
+    const executeCode= async () => {
       setLoading(true);
       setOutput("");
       if(code.replaceAll(" ","").replaceAll("\n","")===""){//if code field is empty
@@ -37,10 +37,10 @@ const CodeEditorPage = () =>{
       };
     
       try{
-        const response = await axios.post("http://localhost:5000/run", payload);//post request
+        const response = await axios.post(import.meta.env.VITE_EXECUTE_API, payload);//post request
     
         const intervalId = setInterval(async()=>{
-          const jobResponse = await axios.get("http://localhost:5000/status",{params:{id:response.data.jobId}});
+          const jobResponse = await axios.get(import.meta.env.VITE_STATUS_API, {params:{id:response.data.jobId}});
           const {success, job, error} = jobResponse.data;
           if(success){
             const {status:jobStatus, output:jobOutput} = job;
@@ -54,7 +54,7 @@ const CodeEditorPage = () =>{
             setLoading(false);
             clearInterval(intervalId);
           }
-        },2000);//2 sec delay
+        },3000);//3 sec delay
       } catch (err) {
         alert("Error connecting to the server");
         setLoading(false);
@@ -62,17 +62,16 @@ const CodeEditorPage = () =>{
     };
 
     const DisplayLogo=(props) => {
-
       return <img src={ new URL (`../assets/${props.language}.png`, import.meta.url)} alt='logo' //new URL is used to get the path of the image
               className="image" 
-              height={(props.language==='c'||props.language==='cpp')?30:25} 
-              width={(props.language==='c'||props.language==='cpp')?30:25}
+              height={30}
+              width={30}
             />;
     }
 
 
     return(
-        <div className="main">
+        <div className="CodeEditorPage">
             <Navbar variant="dark">
               <Container>
 
@@ -80,19 +79,7 @@ const CodeEditorPage = () =>{
                   Online IDE
                 </Navbar.Brand>
 
-              </Container>
-              
-              <Button variant="secondary" size="lg" 
-                style={{float:'right', marginInline:'40px'}} 
-                disabled={loading}
-                onClick={()=>{runCode()}}>
-                Run Code
-              </Button>
-            </Navbar>
-
-            <div className="componentsDiv">
-              <div className="codeEditorDiv">
-              <DropdownButton menuVariant="dark" variant="secondary"
+                <DropdownButton menuVariant="dark" variant="secondary"
                   title={<><DisplayLogo language={language}/><span className="selectedOption">{option}</span></>} 
                       onSelect={(a, e)=>{setOption(e.target.innerText); 
                                          setLanguage(e.target.value);
@@ -104,9 +91,23 @@ const CodeEditorPage = () =>{
                     <DropdownItem as={Button} value='py'><DisplayLogo language='py'/>Python</DropdownItem>  
                   </DropdownButton>
 
+              </Container>
+              
+              <Button variant="secondary" size="lg" 
+                style={{float:'right', marginInline:'40px', minHeight:'90%'}} 
+                disabled={loading}
+                onClick={executeCode}>
+                Run Code
+              </Button>
+            </Navbar>
+
+            <div className="mainDiv">
+              <div className="codeEditorDiv">
+
                 <CodeEditor language={language} setCode={setCode}/>
                 
               </div>
+
               <div className="ioDiv">
                 <div className="outputDiv">
                   <OutputField output={output} loading={loading}/>
@@ -114,11 +115,12 @@ const CodeEditorPage = () =>{
                 <div className="inputDiv">
                   <InputField setInputs={setInputs}/>
                 </div>
-              </div>
             </div>
-            
+              
+            </div>
         </div>
     )
 }
 
 export default CodeEditorPage
+

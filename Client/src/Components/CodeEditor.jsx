@@ -46,7 +46,7 @@ const CodeEditor = ({language, setCode}) => {
         editorRef.current.setOption('mode',languageMode);
         editorRef.current.setValue(SampleCode[language]);
         console.log('language mode set: ',languageMode)
-    }, [language])
+    }, [language]);
 
     useEffect(()=>{//whenever changes are done in code
         editorRef.current.on('change',()=>{setCode(editorRef.current.getDoc().getValue())})
