@@ -1,125 +1,95 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from 'axios';
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import DropdownItem from "react-bootstrap/esm/DropdownItem";
-import 'bootstrap/dist/css/bootstrap.css';
 import CodeEditor from "../Components/CodeEditor";
 import OutputField from "../Components/OutputField";
 import InputField from "../Components/InputField";
+import Dropdown from "../Components/Dropdown";
 import SampleCode from "../SampleCode.js";
 
 const CodeEditorPage = () =>{
 
-    const [code, setCode] = useState(SampleCode['c']);
-    const [language, setLanguage] = useState('c');
-    const [inputs, setInputs] = useState('');
-    const [output, setOutput] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [option, setOption] = useState('C');
+  const [code, setCode] = useState(SampleCode['c']);
+  const [language, setLanguage] = useState('c');
+  const [inputs, setInputs] = useState('');
+  const [output, setOutput] = useState('');
+  const [loading, setLoading] = useState(false);
 
-
-    const executeCode= async () => {
-      setLoading(true);
-      setOutput("");
-      if(code.replaceAll(" ","").replaceAll("\n","")===""){//if code field is empty
-        alert("No Code Submitted");
-        setLoading(false);
-        return;
-      }
-
-      const payload={//payload of an API is the data you sen to the server when you make an API request.
-        language,
-        code,//in es6 code:code is same as code
-        inputs
-      };
-    
-      try{
-        const response = await axios.post(import.meta.env.VITE_EXECUTE_API, payload);//post request
-    
-        const intervalId = setInterval(async()=>{
-          const jobResponse = await axios.get(import.meta.env.VITE_STATUS_API, {params:{id:response.data.jobId}});
-          const {success, job, error} = jobResponse.data;
-          if(success){
-            const {status:jobStatus, output:jobOutput} = job;
-            if(jobStatus==="pending") return;//continue loop
-            setOutput(jobOutput);
-            setLoading(false);
-            clearInterval(intervalId);//stops interval loop wh
-          }
-          else{
-            setOutput(error);
-            setLoading(false);
-            clearInterval(intervalId);
-          }
-        },3000);//3 sec delay
-      } catch (err) {
-        alert("Error connecting to the server");
-        setLoading(false);
-      }
-    };
-
-    const DisplayLogo=(props) => {
-      return <img src={ new URL (`../assets/${props.language}.png`, import.meta.url)} alt='logo' //new URL is used to get the path of the image
-              className="image" 
-              height={30}
-              width={30}
-            />;
+  const executeCode= async () => {
+    setLoading(true);
+    setOutput("");
+    if(code.replaceAll(" ","").replaceAll("\n","")===""){//if code field is empty
+      alert("No Code Submitted");
+      setLoading(false);
+      return;
     }
 
+    const payload={//payload of an API is the data you sen to the server when you make an API request.
+      language,
+      code,//in es6 code:code is same as code
+      inputs
+    };
+    
+    try{
+      const response = await axios.post(import.meta.env.VITE_EXECUTE_API, payload);//post request
+  
+      const intervalId = setInterval(async()=>{
+        const jobResponse = await axios.get(import.meta.env.VITE_STATUS_API, {params:{id:response.data.jobId}});
+        const {success, job, error} = jobResponse.data;
+        if(success){
+          const {status:jobStatus, output:jobOutput} = job;
+          if(jobStatus==="pending") return;//continue loop
+          setOutput(jobOutput);
+          setLoading(false);
+          clearInterval(intervalId);//stops interval loop wh
+        }
+        else{
+          setOutput(error);
+          setLoading(false);
+          clearInterval(intervalId);
+        }
+      },3000);//3 sec delay
+    } catch (err) {
+      alert("Error connecting to the server");
+      setLoading(false);
+    }
+  };
 
-    return(
-        <div className="CodeEditorPage">
-            <Navbar variant="dark">
-              <Container>
+  return (
+    <div className='flex flex-col h-screen bg-zinc-700 text-white'>
 
-                <Navbar.Brand>
-                  Online IDE
-                </Navbar.Brand>
-
-                <DropdownButton menuVariant="dark" variant="secondary"
-                  title={<><DisplayLogo language={language}/><span className="selectedOption">{option}</span></>} 
-                      onSelect={(a, e)=>{setOption(e.target.innerText); 
-                                         setLanguage(e.target.value);
-                                         setOutput("")}}>
-                    <DropdownItem as={Button} value='c'><DisplayLogo language='c'/>C</DropdownItem>
-                    <DropdownItem as={Button} value='cpp'><DisplayLogo language='cpp'/>C++</DropdownItem>
-                    <DropdownItem as={Button} value='java'><DisplayLogo language='java'/>Java</DropdownItem>
-                    <DropdownItem as={Button} value='js'><DisplayLogo language='js'/>JavaScript</DropdownItem> 
-                    <DropdownItem as={Button} value='py'><DisplayLogo language='py'/>Python</DropdownItem>  
-                  </DropdownButton>
-
-              </Container>
-              
-              <Button variant="secondary" size="lg" 
-                style={{float:'right', marginInline:'40px', minHeight:'90%'}} 
-                disabled={loading}
-                onClick={executeCode}>
-                Run Code
-              </Button>
-            </Navbar>
-
-            <div className="mainDiv">
-              <div className="codeEditorDiv">
-
-                <CodeEditor language={language} setCode={setCode}/>
-                
-              </div>
-
-              <div className="ioDiv">
-                <div className="outputDiv">
-                  <OutputField output={output} loading={loading}/>
-                </div>
-                <div className="inputDiv">
-                  <InputField setInputs={setInputs}/>
-                </div>
-            </div>
-              
-            </div>
+      <nav className="flex items-center justify-between flex-wrap bg-zinc-800 p-3">
+        <div className="flex flex-shrink-0  mr-6">
+          <h1 className="text-4xl font-bold text-white">Online IDE</h1>
         </div>
-    )
+
+        <div className="flex flex-row">
+          <Dropdown language={language} setLanguage={setLanguage}/>
+          <button onClick={executeCode} className="inline-flex items-center text-xl px-4 ml-4 border rounded border-white hover:bg-zinc-900 lg:mt-0">
+            { !loading ? ('Run Code') : // If loading is false, show this
+            (<div className="flex flex-row">
+              <svg className="animate-spin -ml-1 mr-3 h-7 w-7 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <p>Executing</p>
+            </div>)}
+          </button>
+        </div>
+      </nav>
+
+      <div className="flex flex-grow">
+        <div className="CodeEditorDiv w-1/2 m-2 px-1 py-1">
+          <CodeEditor code={code} setCode={setCode} language={language}/>
+        </div>
+        
+        <div className="IODiv mt-2 flex-grow">
+          <OutputField output={output} setOutput={setOutput}/>
+          <InputField inputs={inputs} setInputs={setInputs}/>
+        </div>
+
+      </div>
+    </div>
+  );
 }
 
 export default CodeEditorPage

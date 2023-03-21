@@ -20,7 +20,6 @@ const CodeEditor = ({language, setCode}) => {
                 lineNumbers: true,
                 autoCloseBrackets: true,
             });
-            console.log('CodeEditor rendered')
         }
         init();
     },[])
@@ -45,7 +44,6 @@ const CodeEditor = ({language, setCode}) => {
         }
         editorRef.current.setOption('mode',languageMode);
         editorRef.current.setValue(SampleCode[language]);
-        console.log('language mode set: ',languageMode)
     }, [language]);
 
     useEffect(()=>{//whenever changes are done in code

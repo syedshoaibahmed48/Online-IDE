@@ -21,13 +21,13 @@ in vscode, open folder repos, open terminal and write below command
 ### Step-3: Installing node packages
 in vscode, open folder Online_IDE, open terminal and write below commands in sequence
 1. **cd client && npm install**
-2. **cd .. && cd codeexecstoreserver && npm install npm install**
+2. **cd .. && cd codeexecstoreserver && npm install**
 
 
 ### Step-4: Running the Application
 
 #### <ins>1.Start redis server</ins>
-in cmd, enter below commands and wnter password whenever needed    
+in cmd, enter below commands and enter password whenever needed    
 **wsl**     
 **sudo service redis-server start**    
 

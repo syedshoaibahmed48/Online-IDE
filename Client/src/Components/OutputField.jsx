@@ -1,6 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import Spinner from 'react-bootstrap/Spinner';
-import 'bootstrap/dist/css/bootstrap.css';
 import CodeMirror from "codemirror";
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/markdown/markdown'
@@ -29,8 +27,8 @@ const OutputField = ({output, loading}) => {
     }, [output])
 
     return <>
-            <div style={{display:'flex', flexDirection:'row'}}>
-               <h2 style={{marginRight:'20px'}}>Output</h2>
+            <div className="flex flex-row">
+               <h1 className="text-2xl">Output</h1>
                {loading? <Spinner animation="border" />: null}
             </div>
             <textarea id="outputField"></textarea>
