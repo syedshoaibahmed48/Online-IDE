@@ -6,15 +6,22 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/python/python';
 import 'codemirror/theme/tomorrow-night-eighties.css';
 import 'codemirror/addon/edit/closebrackets';
-import SampleCode from "../SampleCode.js";
+import SampleCode from "../assets/SampleCode.js";
 
-const CodeEditor = ({language, setCode}) => {
 
-    const editorRef=useRef(null);
+const CodeEditor = ({ language, code, setCode, isCollaborative, socket }) => {
+
+    const editor=useRef(null);
+
+    const sendCode = (instance) => {
+        const code = instance.getValue();
+        const { line, ch } = instance.getDoc().getCursor();
+        socket.current.emit('code-change', { code, line, ch });
+    }
 
     useEffect(()=>{//create the codemirror editor
         const init = async ()=> {
-            editorRef.current=CodeMirror.fromTextArea(document.getElementById('editor'),{
+            editor.current=CodeMirror.fromTextArea(document.getElementById('editor'),{
                 mode: {name: 'clike'},
                 theme: 'tomorrow-night-eighties',
                 lineNumbers: true,
@@ -22,7 +29,38 @@ const CodeEditor = ({language, setCode}) => {
             });
         }
         init();
-    },[])
+
+        if(isCollaborative){ //if collaborative, register event listener for collaborative editing
+
+            socket.current.on('sync-code', ({userName, code, remoteCursorPos }) => {
+                const { line, ch } = editor.current.getDoc().getCursor();
+                editor.current.getDoc().setValue(code);
+                editor.current.getDoc().setCursor({line, ch});
+
+                // show remote user's cursor
+                const remoteCursor = document.createElement('div');
+                remoteCursor.innerHTML = `<div class="userName">${userName}</div><span>|</span>`;
+                remoteCursor.className = 'remote-cursor';
+
+                const bookmark = editor.current.getDoc().setBookmark(
+                    {line: remoteCursorPos.line, ch: remoteCursorPos.ch}, {  widget: remoteCursor });
+                setTimeout(() => bookmark.clear(), 1000);
+            });
+            
+        }
+
+        editor.current.on('change',(instance, changeObj)=>{
+            setCode(instance.getValue());
+            const { origin } = changeObj;
+            if(isCollaborative && origin !== 'setValue' ) sendCode(instance);
+        });
+
+        return ()=>{//cleanup
+            editor.current.off('change');
+            editor.current.toTextArea();
+            if(isCollaborative) socket.current.off('sync-code');
+        }
+    },[]);
 
     useEffect(()=>{//whenever language is changed using dropdown
         let languageMode;
@@ -42,15 +80,9 @@ const CodeEditor = ({language, setCode}) => {
                 languageMode= {name: 'clike'};
                 break;
         }
-        editorRef.current.setOption('mode',languageMode);
-        editorRef.current.setValue(SampleCode[language]);
+        editor.current.setOption('mode',languageMode);
+        editor.current.setValue( isCollaborative ? code : SampleCode[language] );
     }, [language]);
-
-    useEffect(()=>{//whenever changes are done in code
-        editorRef.current.on('change',()=>{setCode(editorRef.current.getDoc().getValue())})
-    },[setCode])
-
-
 
     return <textarea id="editor"></textarea>
 };

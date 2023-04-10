@@ -1,10 +1,16 @@
 import React, {useState} from "react";
 
-const Dropdown = (props) => {
+const Dropdown = ({language, setLanguage}) => {
 
-    const {language, setLanguage} = props; //destructure props
+    const fullName = {
+        "c": "C",
+        "cpp": "C++",
+        "java": "Java",
+        "py": "Python",
+        "js": "JavaScript"
+    }
 
-    const [option, setOption] = useState("C"); //[C, C++, Java, Python, JavaScript]
+    const [option, setOption] = useState(fullName[language]); //[C, C++, Java, Python, JavaScript]
 
     const showOptions = () => { //show options in dropdown menu
         const options = document.getElementById("options");
@@ -20,19 +26,19 @@ const Dropdown = (props) => {
         options.style.display = "none";
     }
 
-    const Option = (props) => { //display option in dropdown menu
+    const Option = ({option, language}) => { //display option in dropdown menu
         return( 
         <div className="flex flex-row px-2 py-2 text-sm text-white hover:bg-zinc-900" 
-        onClick={(e)=>{ setOption(e.target.innerText); setLanguage(props.language); closeOptions()}}>
-            <img className="w-6 h-6 mr-2" src={ new URL (`../assets/${props.language}.png`, import.meta.url)} alt='logo' />
-            <span className="self-center">{props.option}</span>
+        onClick={(e)=>{ setOption(e.target.innerText); setLanguage(language); closeOptions()}}>
+            <img className="w-6 h-6 mr-2" src={ new URL (`../assets/${language}.png`, import.meta.url)} alt='logo' />
+            <span className="self-center">{option}</span>
         </div>
         );
     }
 
 
     return (
-        <div className="flex flex-column">
+        <div className="flex flex-column cursor-pointer">
         <button className="flex-row justify-between inline-flex w-36 items-center text-white font-semibold rounded px-2 py-2 border hover:bg-zinc-900"
          onClick={showOptions}>
             <div className="flex flex-row text-sm text-white hover:bg-zinc-900" >

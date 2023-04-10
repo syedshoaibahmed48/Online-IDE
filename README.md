@@ -3,14 +3,15 @@ An Online real-time collaborative IDE.
 
 ## Installation and Execution Instructions
 ### Step-1: Installing runtime environments and other tools
-1.Install git - https://www.youtube.com/watch?v=cJTXh7g-uCM     
-1.download gcc compiler-https://www.youtube.com/watch?v=WWTocqPrzMk     
-2.download jdk    
-3.download nodejs     
-4.download python    
-5.set environment variables for above    
-6.install MongoDB (with compass and shell)- https://www.youtube.com/watch?v=CK50OGxCtaM     
-7.install redis -(tutorial) https://www.youtube.com/watch?v=nB7zi88DB1Y       
+#### 1.Install 
+  * git - https://www.youtube.com/watch?v=cJTXh7g-uCM     
+  * gcc compiler-https://www.youtube.com/watch?v=WWTocqPrzMk     
+  * jdk    
+  * nodejs     
+  * python    
+#### 2.set environment variables for above    
+#### 3.install MongoDB (with compass and shell)- https://www.youtube.com/watch?v=CK50OGxCtaM     
+#### 4.install redis -(tutorial) https://www.youtube.com/watch?v=nB7zi88DB1Y       
 (documentation)https://redis.io/docs/getting-started/installation/install-redis-on-windows/    
     
 ### Step-2: Cloning the project to local repository
@@ -42,7 +43,7 @@ in vscode, open folder Online_IDE, open two terminals
 in terminal-1   
 **cd client && npm run dev**     
 in terminal-2    
-**cd codeexecstoreserver && npm start**   
+**cd codeexecstoreserver && npm run dev**   
 (to close) **CTRL+C**, and then **y** if prompted.     
 
 #### <ins>3.To view Database using MongoDB compass</ins>

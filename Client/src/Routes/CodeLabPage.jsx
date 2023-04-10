@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import CodeEditor from "../Components/CodeEditor";
+import CodeEditor  from "../Components/CodeEditor";
 import OutputField from "../Components/OutputField";
 import InputField from "../Components/InputField";
 import Dropdown from "../Components/Dropdown";
-import SampleCode from "../SampleCode.js";
+import SampleCode from "../assets/SampleCode";
+import { Toast, showToast } from "../Components/Toast";
 
-const CodeEditorPage = () =>{
+const CodeLabPage = () =>{
 
   const [code, setCode] = useState(SampleCode['c']);
   const [language, setLanguage] = useState('c');
@@ -14,11 +15,18 @@ const CodeEditorPage = () =>{
   const [output, setOutput] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const executeCode= async () => {
+  useEffect(() => {
+    document.title = "CodeLab";
+    return () => {
+      document.title = "Online IDE";
+    };
+  }, []);
+
+  const executeCode = async () => {
     setLoading(true);
     setOutput("");
     if(code.replaceAll(" ","").replaceAll("\n","")===""){//if code field is empty
-      alert("No Code Submitted");
+      showToast("Code field is empty", "error");
       setLoading(false);
       return;
     }
@@ -49,22 +57,25 @@ const CodeEditorPage = () =>{
         }
       },3000);//3 sec delay
     } catch (err) {
-      alert("Error connecting to the server");
+      showToast("Error connecting to server", "error");
       setLoading(false);
     }
   };
 
   return (
     <div className='flex flex-col h-screen bg-zinc-700 text-white'>
-
+      <Toast/>
       <nav className="flex items-center justify-between flex-wrap bg-zinc-800 p-3">
         <div className="flex flex-shrink-0  mr-6">
-          <h1 className="text-4xl font-bold text-white">Online IDE</h1>
+          <h1 className="text-4xl font-bold text-white">CodeLab</h1>
         </div>
 
         <div className="flex flex-row">
+
           <Dropdown language={language} setLanguage={setLanguage}/>
-          <button onClick={executeCode} className="inline-flex items-center text-xl px-4 ml-4 border rounded border-white hover:bg-zinc-900 lg:mt-0">
+
+          <button onClick={executeCode} className="inline-flex items-center text-xl px-4 ml-4 border rounded border-white hover:bg-zinc-900 lg:mt-0"
+            disabled={ loading ? true : false } >
             { !loading ? ('Run Code') : // If loading is false, show this
             (<div className="flex flex-row">
               <svg className="animate-spin -ml-1 mr-3 h-7 w-7 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -78,11 +89,11 @@ const CodeEditorPage = () =>{
       </nav>
 
       <div className="flex flex-grow">
-        <div className="CodeEditorDiv w-1/2 m-2 px-1 py-1">
-          <CodeEditor code={code} setCode={setCode} language={language}/>
+        <div className="CodeLabCM w-1/2 m-2 px-1 py-1">
+          <CodeEditor setCode={setCode} language={language} />
         </div>
         
-        <div className="IODiv mt-2 flex-grow">
+        <div className="CodeLabIO mt-2 flex-grow">
           <OutputField output={output} setOutput={setOutput}/>
           <InputField inputs={inputs} setInputs={setInputs}/>
         </div>
@@ -92,5 +103,4 @@ const CodeEditorPage = () =>{
   );
 }
 
-export default CodeEditorPage
-
+export default CodeLabPage;
