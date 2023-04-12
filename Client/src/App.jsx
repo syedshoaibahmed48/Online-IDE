@@ -5,6 +5,8 @@ import CodeLabPage from './Routes/CodeLabPage';
 import LandingPage from './Routes/LandingPage';
 import CodeRoomPage from './Routes/CodeRoomPage';
 import NotFoundPage from './Routes/NotFoundPage';
+import AuthPage from './Routes/AuthPage';
+import ProjectsPage from './Routes/ProjectsPage';
 
 
 function App() {
@@ -14,9 +16,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<LandingPage/>}/>
+          <Route path='/login' element={<AuthPage/>}/>
           <Route path='/codelab' element={<CodeLabPage/>}/>
           <Route path='/coderoom/:roomid' element={<CodeRoomPage/>}/>
           <Route path='/notfound' element={<NotFoundPage/>}/>
+          <Route path='/projects' element={<ProjectsPage/>}/>
           <Route path="*" element={<Navigate to="/notfound" replace />} /> 
         </Routes>
       </BrowserRouter>
