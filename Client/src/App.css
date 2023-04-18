@@ -5,7 +5,6 @@
 .CodeLabCM .CodeMirror {
   height: 100%; 
   border-radius: 10px;
-  
 }
 
 .CodeLabIO .CodeMirror{
@@ -31,12 +30,11 @@
 }
 
 .remote-cursor .userName {
-  position: absolute;
-  font-size: 10px;
+  position: fixed;
+  font-size: 12px;
   font-weight: bold;
   margin-top: -10px;
   padding-inline: 4px;
-  z-index: 100;
   color: black;
   background-color: white;
 }

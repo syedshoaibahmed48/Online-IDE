@@ -14,7 +14,7 @@ const CodeRoomPage = () => {
 
     var { userName, language, action } = location.state ? location.state : { userName: '', language: null, action: 'join' };
 
-    const { roomid } = useParams();
+    const { roomId } = useParams();
     const socket = useRef(null);
 
     const [name, setName] = useState(userName); // name of the user
@@ -30,7 +30,7 @@ const CodeRoomPage = () => {
     }
 
     const joinRoom = async () => {
-        socket.current.emit('join-room', { roomid, name, language, action }, 
+        socket.current.emit('join-room', { roomId, name, language, action }, 
         ({success, name,  language, connectedUsers, code, message }) => {// callback
             if (success) {
                 setupRoom(name, language, connectedUsers);
@@ -51,7 +51,7 @@ const CodeRoomPage = () => {
     }
 
     const handleJoinRoomError = (message) => {
-        showToast(message, 'error');
+        showToast('error', message);
         setTimeout(() => {
             navigate('/');
         }, 2000);
@@ -60,12 +60,12 @@ const CodeRoomPage = () => {
     const handleUserConnect = (socketId, name) => {
         const newUser = {socketId: socketId, name: name};
         setUsers((users) => [...users, newUser]);
-        if(!document.hidden) showToast(`👋 ${name} joined the room`, 'user-connected');
+        if(!document.hidden) showToast('user-connected', `👋 ${name} joined the room`);
     }
 
     const handleUserDisconnect = (socketId, name) => {
         setUsers((users) => users.filter((u) => u.socketId !== socketId));
-        if(!document.hidden) showToast(`👋 ${name} left the room`, 'user-disconnected');
+        if(!document.hidden) showToast('user-disconnected', `👋 ${name} left the room`);
     }
 
     const shareRoomURL = () => {
@@ -75,16 +75,12 @@ const CodeRoomPage = () => {
               url: window.location.href,
             })
           } else {
-            showToast('Web Share API not supported on this browser.', 'error');
+            showToast('error', 'Web Share API not supported on this browser.');
           }
-    }
-    
-    const copyRoomID = () => {
-        navigator.clipboard.writeText(roomid);
     }
 
     const leaveRoom = () => {
-        socket.current.emit('leave-room', { roomid, name });
+        socket.current.emit('leave-room', { roomId, name });
         navigate('/');
     };
 
@@ -121,7 +117,7 @@ const CodeRoomPage = () => {
 
 
     return (
-    <div className="room flex flex-col h-screen overflow-y-hidden">
+    <div className="room flex flex-col h-screen">
     <Toast />
     <nav className="flex items-center justify-between flex-wrap bg-gray-800 p-3">
         <div className="flex flex-shrink-0  mr-6">
@@ -150,7 +146,7 @@ const CodeRoomPage = () => {
         <div className="flex flex-col w-1/6 bg-gray-700 text-center border-r-2 border-gray-500">
             <h2 className="text-xl font-extralight text-gray-400 self-center m-2">Connected Users</h2>
                     
-            <div className="h-5/6 w-full px-2 overflow-x-hidden overflow-y-auto">
+            <div className="h-8/10 w-full px-2 overflow-x-hidden overflow-y-auto">
             <ConnectedUser key={socket.current.id} name={name}/>
                 {users.map((user) => (
                     <ConnectedUser key={user.socketId} name={user.name}/>
@@ -161,10 +157,6 @@ const CodeRoomPage = () => {
                 <button className="bg-gray-800 hover:bg-gray-600 text-white font-bold py-2 px-4 w-11/12 self-center rounded mb-2"
                 onClick={shareRoomURL}>
                     Invite Others
-                </button>
-                <button className="bg-gray-800 hover:bg-gray-600 text-white font-bold py-2 px-4 w-11/12 self-center rounded mb-2"
-                onClick={copyRoomID}>
-                    Copy Room ID
                 </button>
                 <button className="bg-gray-800 hover:bg-gray-600 text-white font-bold py-2 px-4 w-11/12 self-center rounded"
                 onClick={leaveRoom}>

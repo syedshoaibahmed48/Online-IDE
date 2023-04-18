@@ -23,6 +23,7 @@ in vscode, open folder repos, open terminal and write below command
 in vscode, open folder Online_IDE, open terminal and write below commands in sequence
 1. **cd client && npm install**
 2. **cd .. && cd codeexecstoreserver && npm install**
+3. **cd .. && cd collabauthserver && npm install**
 
 
 ### Step-4: Running the Application
@@ -44,8 +45,17 @@ in terminal-1
 **cd client && npm run dev**     
 in terminal-2    
 **cd codeexecstoreserver && npm run dev**   
-(to close) **CTRL+C**, and then **y** if prompted.     
+(to close) **CTRL+C**, and then **y** if prompted.    
+in terminal-3
+**cd collabauthserver && npm run dev** 
 
 #### <ins>3.To view Database using MongoDB compass</ins>
 using mongodb compass connect to DB using below connection string     
 **mongodb://127.0.0.1/**
+
+MongoDB commands:
+1. **show dbs** - to show all databases
+2. **use <db_name>** - to use a database
+3. **show collections** - to show all collections in a database
+4. **db.users.updateOne({_id : ObjectId('2313216556454')}, {$set : {"userProjects": []}})** - to clear userProjects array in users collection
+5. **db.users.updateOne({_id : ObjectId('2313216556454')}, {$set : {"collabProjects": []}})** - to clear collabProjects array in users collection

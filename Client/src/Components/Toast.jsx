@@ -1,7 +1,7 @@
 import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const showToast = (message, type) => {
+const showToast = (type, message) => {
     switch (type) {
         case 'user-connected':
         case 'user-disconnected':
@@ -13,6 +13,9 @@ const showToast = (message, type) => {
                 closeOnClick: false,
                 progressClassName: "bg-red-400",
             });
+            break;
+        case 'success':
+            toast.success(message);
             break;
         default:
             toast(message);

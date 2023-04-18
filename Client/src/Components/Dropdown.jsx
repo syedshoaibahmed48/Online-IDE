@@ -39,7 +39,7 @@ const Dropdown = ({language, setLanguage}) => {
 
     return (
         <div className="flex flex-column cursor-pointer">
-        <button className="flex-row justify-between inline-flex w-36 items-center text-white font-semibold rounded px-2 py-2 border hover:bg-zinc-900"
+        <button className="flex-row justify-between inline-flex w-36 items-center text-white font-semibold rounded px-2 py-2 border hover:bg-gray-900"
          onClick={showOptions}>
             <div className="flex flex-row text-sm text-white hover:bg-zinc-900" >
                 <img className="w-6 h-6 mr-2" src={ new URL (`../assets/${language}.png`, import.meta.url)} alt='logo' />
@@ -49,7 +49,7 @@ const Dropdown = ({language, setLanguage}) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
             </svg>
         </button>
-        <div id="options" className="absolute w-36 z-10 mt-12 bg-zinc-800 rounded-md shadow-lg px-1 py-2" style={{display: "none"}}>
+        <div id="options" className="absolute w-36 z-20 mt-12 bg-zinc-800 rounded-md shadow-lg px-1 py-2" style={{display: "none"}}>
                 <Option option="C" language="c"/>
                 <Option option="C++" language="cpp"/>
                 <Option option="Java" language="java"/>

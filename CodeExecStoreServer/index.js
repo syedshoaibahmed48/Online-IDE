@@ -32,7 +32,7 @@ app.post('/execute', async (req,res)=>{//this code handles post request to '/exe
     const {language, code, inputs}=req.body;
     try{
         const filePath=await generateCodeFile(language, code);//to generate code file
-        job =await new Job({language, filePath, inputs}).save();//savin doc with lang and filepath in db
+        const job = await new Job({language, filePath, inputs}).save();//savin doc with lang and filepath in db
         const jobId=job['_id'];
         AddJobToQueue(jobId);
         console.log("[Run Request]:",JSON.stringify(jobId));

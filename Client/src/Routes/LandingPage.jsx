@@ -6,11 +6,27 @@ const LandingPage = () => {
 
     const navigate = useNavigate();
 
+    const token = localStorage.getItem("token");
+
     return (
         <div className="flex flex-col h-screen bg-gray-700">
             <nav className="flex items-center justify-between flex-wrap bg-gray-800 p-3">
                 <div className="flex flex-shrink-0  mr-6">
                   <h1 className="text-4xl font-bold text-white">Online IDE</h1>
+                </div>
+
+                <div>
+                    <button className="inline-block text-lg px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-gray-800 hover:bg-white mt-4 lg:mt-0"
+                        onClick={() => { 
+                            if(token){
+                                navigate("/dashboard");
+                            }
+                            else{
+                                navigate("/auth");
+                            }
+                         }} >
+                        {token ? "Go to Dashboard" : "Signin or Signup"}
+                    </button>
                 </div>
             </nav>
 

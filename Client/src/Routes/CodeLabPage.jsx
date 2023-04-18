@@ -26,7 +26,7 @@ const CodeLabPage = () =>{
     setLoading(true);
     setOutput("");
     if(code.replaceAll(" ","").replaceAll("\n","")===""){//if code field is empty
-      showToast("Code field is empty", "error");
+      showToast("error", "Code field is empty");
       setLoading(false);
       return;
     }
@@ -57,7 +57,7 @@ const CodeLabPage = () =>{
         }
       },3000);//3 sec delay
     } catch (err) {
-      showToast("Error connecting to server", "error");
+      showToast("error", "Error connecting to server");
       setLoading(false);
     }
   };

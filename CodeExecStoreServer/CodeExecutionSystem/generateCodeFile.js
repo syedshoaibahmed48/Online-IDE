@@ -12,7 +12,7 @@ const generateCodeFile= async (language, code)=>{
     const uniqueName=uuid();
     const fileName=`${uniqueName}.${language}`;
     const filePath=path.join(CodeFilesDir,fileName);//file path for code file is created
-    await fs.writeFileSync(filePath,code);//file is writtenin above created filepath
+    await fs.writeFileSync(filePath,code);//file is written in above created filepath
     return filePath;
 };
 

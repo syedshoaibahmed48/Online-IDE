@@ -17,7 +17,7 @@ const EnterRoomForm = () => {
 
     const navigateToRoom = () => {
         if(!roomID || !name) {
-            showToast("Please enter the room ID and name", "error");
+            showToast("error", "Please enter the room ID and name");
             return;
         }
         navigate(`/coderoom/${roomID}`, {state: {language, userName: name, action: formType}});
