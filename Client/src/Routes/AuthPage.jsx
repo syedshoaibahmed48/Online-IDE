@@ -83,6 +83,7 @@ const AuthPage = () => {
                 formType === "signin" ? import.meta.env.VITE_SIGNIN_API : import.meta.env.VITE_SIGNUP_API, 
                 payload);
             if(response.data.success === true) {
+                if(localStorage.getItem("token")) localStorage.removeItem("token");
                 localStorage.setItem("token", response.data.token);
                 showToast("success", "Successfully " + (formType === "signin" ? "signed-in" : "signed-up") );// remove if not required
                 setTimeout(() => {

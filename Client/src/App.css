@@ -12,16 +12,30 @@
   height: 43%;
 }
 
-.room .CodeMirror{
+.CodeRoom .CodeMirror{
   width: 100%;
-  height: 100%;
+  height: 95%;
+}
+
+.CodeRoom .Sidebar{
+  height: 94%;
+}
+
+.ProjectPage .CodeMirror{
+  width: 100%;
+  height: 94%;
+}
+
+.IOTerminal .CodeMirror{
+  width: 96%;
+  height: 85%;
+  border-radius: 10px;
 }
 
 .remote-cursor {
   display: inline-flex;
   flex-direction: column;
   position: absolute;
-  ;
 }
 
 .remote-cursor span {

@@ -7,15 +7,16 @@ const ProjectSchema=mongoose.Schema({
     },
     language:{
         type:String,
-        required:true
+        required:true,
+        enum:['c', 'cpp', 'java', 'js', 'py'],
     },
     isCollaborative:{
         type:Boolean,
         required:true
     },
-    collaborators:{
-        type:[String],
-        default:[]
+    collaborators:{//map of userids to name
+        type: Map,
+        of: String
     },
     createdAt:{
         type:Date,

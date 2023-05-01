@@ -26,13 +26,7 @@ const OutputField = ({output, loading}) => {
         outputRef.current.setValue(output);
     }, [output])
 
-    return <>
-            <div className="flex flex-row">
-               <h1 className="text-2xl">Output</h1>
-               {loading? <Spinner animation="border" />: null}
-            </div>
-            <textarea id="outputField"></textarea>
-           </>;
+    return <textarea id="outputField"></textarea>;
 };
 
 export default OutputField;

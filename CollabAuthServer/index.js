@@ -56,8 +56,8 @@ app.get('/user-details', async (req, res) => { // get user details
     const token = req.headers.authorization.split(" ")[1];
     const decoded = verifyToken(token);
     if(decoded) {
-        const { userid } = decoded;
-        const user = await User.findOne({ userid });
+        const { userid, username } = decoded;
+        const user = await User.findOne({ userid, username });
         res.json({ success: true, user:{
             userid,
             username: user.username,
@@ -74,14 +74,14 @@ app.post('/new-project', async (req, res) => { // create new project
 
     const token = req.headers.authorization.split(" ")[1];
     const decoded = verifyToken(token);
-    const { userid } = decoded;
+    const { userid, username } = decoded;
     const { name, language, isCollaborative } = req.body;
-    const project = await Project.create({ name, language, isCollaborative });
+    const project = await Project.create({ name, language, isCollaborative, collaborators: { [userid]: username } });
     const projectId = project._id;
     if(isCollaborative) {
-        await User.updateOne({ userid }, { $push: { collabProjects: { id: projectId, name, language, isCollaborative}} });
+        await User.updateOne({ userid, username }, { $set: { [`collabProjects.${projectId}`]: { name, language, isCollaborative } } });
     } else {
-        await User.updateOne({ userid }, { $push: { userProjects: { id: projectId, name, language, isCollaborative}} });
+        await User.updateOne({ userid, username }, { $set: { [`userProjects.${projectId}`]: { name, language, isCollaborative } } });
     }
     console.log("Project created with name: " + name + " for user: " + userid);
     res.json({ success: true, projectId });
@@ -90,12 +90,50 @@ app.post('/new-project', async (req, res) => { // create new project
 app.get('/project-details', async (req, res) => { // get project details
     const token = req.headers.authorization.split(" ")[1];
     const decoded = verifyToken(token);
-    const { userid } = decoded;
+    const { userid, username } = decoded;
     const { projectId } = req.query;
+    const project = await Project.findById(projectId);
 
-    const project = await Project.findOne({ projectId });
+    if(!project){// check if project exists
+        res.json({ success: false, error: "Project not found" });
+        return;
+    }
 
-    res.json({success: true, project});
+    if(!project.collaborators.has(userid)) { // check if user has access to project
+        res.json({ success: false, error: "You dont have access to this project" });
+    } else {
+        res.json({ success: true, project });
+    }
+});
+
+app.post('/project-save', async (req, res) => { // save project
+    const { projectId, code } = req.body;
+    const project = await Project.findById(projectId);
+    project.code = code;
+    await project.save();
+    res.json({ success: true });
+}); 
+
+app.post('/project-delete', async (req, res) => { // delete project
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = verifyToken(token);
+    const { userid, username } = decoded;
+    const { projectId } = req.body;
+    const project = await Project.findById(projectId);
+
+    if(project.isCollaborative) {// delete project from user 
+        await User.updateOne({ userid, username }, { $unset: { [`collabProjects.${projectId}`]: "" } });
+    } else {
+        await User.updateOne({ userid, username }, { $unset: { [`userProjects.${projectId}`]: "" } });
+    }
+
+    if(project.collaborators.size === 1) {// delete project if no collaborators, else remove user from collaborators
+        await project.delete();
+    } else {
+        await Project.updateOne({ $unset: { [`collaborators.${userid}`]: "" } });
+    }
+
+    res.json({ success: true });
 });
 
 const rooms = new Map(); // map of rooms with roomId as key and users, language and code as value  
@@ -104,16 +142,16 @@ io.on('connection', (socket) => {
 
     console.log(`[${socket.id}] Connected`);
 
-    socket.on('join-room', ({ roomId, name, language, action }, callback) => {
+    socket.on('join-room', async ({ roomId, name, language, action }, callback) => {
         if(action === 'join' && !rooms.has(roomId)) {
             callback({ success: false, message: 'Room does not exist' });
             return;
-        }
+        } 
         console.log(`[${socket.id}] ${action}s room [${roomId}]`);
         name = formatName(name); 
         addUserToRoom(rooms, roomId, name, socket.id, language);
         socket.join(roomId);
-        socket.to(roomId).emit('user-connected', { name, socketId: socket.id });
+        socket.to(roomId).emit('user-connected', { name, connectedUsers: rooms.get(roomId).users });
         callback({ 
             success: true ,
             name,
@@ -121,6 +159,33 @@ io.on('connection', (socket) => {
             connectedUsers: rooms.get(roomId).users, 
             code: rooms.get(roomId).code 
          });
+    });
+
+    socket.on('open-project', async ({ projectId, token }, callback) => {
+        const decoded = verifyToken(token);
+        const { userid, username } = decoded;
+        const project = await Project.findById(projectId)
+            .then(project => project).catch(err => null);
+        if(!project) {
+            console.log(projectId)
+            callback({ success: false, error: "Project not found" });
+            return;
+        } else if(!project.collaborators.has(userid)) {
+            await Project.updateOne({ _id: projectId }, { $set: { [`collaborators.${userid}`]: username } });
+            await User.updateOne({ userid, username }, { $set: { [`collabProjects.${projectId}`]: { name: project.name, language: project.language, isCollaborative: true } } });
+        }
+        const code = rooms.has(projectId) ? rooms.get(projectId).code : project.code;
+        addUserToRoom(rooms, projectId, username, socket.id, project.language);
+        rooms.get(projectId).code = code;
+        socket.join(projectId);
+        socket.to(projectId).emit('user-connected', { name: username, connectedUsers: rooms.get(projectId).users, collaborators: project.collaborators });
+        callback({
+            success: true,
+            project,
+            connectedUsers: rooms.get(projectId).users,
+            collaborators: project.collaborators,
+            code
+        });
     });
 
     socket.on('code-change', ({ code, line, ch }) => {
@@ -135,7 +200,7 @@ io.on('connection', (socket) => {
         console.log(`[${socket.id}] Left room [${roomId}]`);
         socket.leave(roomId);
         removeUserFromRoom(rooms, roomId, socket.id);
-        socket.to(roomId).emit('user-disconnected', { name, socketId: socket.id});
+        if(rooms.get(roomId) !== undefined)  if(rooms.get(roomId).users.size !== 0) socket.to(roomId).emit('user-disconnected', { name, connectedUsers: rooms.get(roomId).users });
     });
 
     socket.on('disconnect', () => {
@@ -143,11 +208,10 @@ io.on('connection', (socket) => {
         if(roomId) {
             const name = getName(rooms, socket.id);
             removeUserFromRoom(rooms, roomId, socket.id);
-            socket.to(roomId).emit('user-disconnected', { name, socketId: socket.id});
+            if(rooms.get(roomId) !== undefined) socket.to(roomId).emit('user-disconnected', { name, connectedUsers: rooms.get(roomId).users});
         }
         console.log(`[${socket.id}] Disconnected`);
     });
-
 });
 
 server.listen(PORT, () => {

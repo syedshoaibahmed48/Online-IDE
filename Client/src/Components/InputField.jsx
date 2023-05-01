@@ -26,7 +26,7 @@ const InputField = ({setInputs}) => {
         inputRef.current.on('change',()=>{setInputs(inputRef.current.getDoc().getValue())})
     },[setInputs])
 
-    return <><h1 className="text-2xl mt-2">Input</h1><textarea id="inputField"></textarea></>;
+    return <textarea id="inputField"></textarea>;
 };
 
 export default InputField;

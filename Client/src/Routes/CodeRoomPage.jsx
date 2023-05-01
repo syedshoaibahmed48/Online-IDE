@@ -4,6 +4,7 @@ import io from "socket.io-client";
 import CodeEditor from "../Components/CodeEditor";
 import ConnectedUser from "../Components/ConnectedUser";
 import { Toast, showToast } from "../Components/Toast";
+import IOTerminal from "../Components/IOTerminal";
 
 
 const CodeRoomPage = () => {
@@ -18,7 +19,7 @@ const CodeRoomPage = () => {
     const socket = useRef(null);
 
     const [name, setName] = useState(userName); // name of the user
-    const [users, setUsers] = useState([]); // list of users in the room
+    const [users, setUsers] = useState({}); // list of users in the room
     const [code, setCode] = useState(""); // code of the room
     const [loading, setLoading] = useState(true);
     const [roomLanguage, setRoomLanguage] = useState(language); // language of the room [c, cpp, java, python, js]
@@ -39,7 +40,10 @@ const CodeRoomPage = () => {
                     setLoading(false);
                 }, 500);
             } else {
-              handleJoinRoomError(message);
+                showToast('error', message);
+                setTimeout(() => {
+                    navigate('/');
+                }, 2000);
             }
         });
     }
@@ -47,24 +51,16 @@ const CodeRoomPage = () => {
     const setupRoom = async (name, language, connectedUsers) => {
         setName(name);
         setRoomLanguage(language);
-        setUsers((users) => [...users, ...connectedUsers.filter((u) => u.socketId !== socket.current.id)]);
+        setUsers(connectedUsers);
     }
 
-    const handleJoinRoomError = (message) => {
-        showToast('error', message);
-        setTimeout(() => {
-            navigate('/');
-        }, 2000);
-    }
-
-    const handleUserConnect = (socketId, name) => {
-        const newUser = {socketId: socketId, name: name};
-        setUsers((users) => [...users, newUser]);
+    const handleUserConnect = (name, connectedUsers) => {
+        setUsers(connectedUsers);
         if(!document.hidden) showToast('user-connected', `👋 ${name} joined the room`);
     }
 
-    const handleUserDisconnect = (socketId, name) => {
-        setUsers((users) => users.filter((u) => u.socketId !== socketId));
+    const handleUserDisconnect = (name, connectedUsers) => {
+        setUsers(connectedUsers);
         if(!document.hidden) showToast('user-disconnected', `👋 ${name} left the room`);
     }
 
@@ -91,15 +87,16 @@ const CodeRoomPage = () => {
         if(roomLanguage) joinRoom();
 
         socket.current.on('connect_error', () => {
-            handleJoinRoomError('Connection error, please try again later.');
+            showToast('error', 'Unable to connect to server. Please try again later.');
+            navigate('/');
         });
 
-        socket.current.on('user-connected', ({socketId, name}) => {
-            handleUserConnect(socketId, name);
+        socket.current.on('user-connected', ({name, connectedUsers}) => {
+            handleUserConnect(name, connectedUsers);
         });
 
-        socket.current.on('user-disconnected', ({socketId, name}) => {
-            handleUserDisconnect(socketId, name);
+        socket.current.on('user-disconnected', ({name, connectedUsers}) => {
+            handleUserDisconnect(name, connectedUsers);
         });
 
         socket.current.on('sync-code', (code) => {
@@ -115,9 +112,8 @@ const CodeRoomPage = () => {
 
     }, []);
 
-
     return (
-    <div className="room flex flex-col h-screen">
+    <div className="CodeRoom flex flex-col h-screen overflow-auto">
     <Toast />
     <nav className="flex items-center justify-between flex-wrap bg-gray-800 p-3">
         <div className="flex flex-shrink-0  mr-6">
@@ -142,15 +138,20 @@ const CodeRoomPage = () => {
 
         ) : (
                 
-    <div className="flex flex-row w-full h-full">
-        <div className="flex flex-col w-1/6 bg-gray-700 text-center border-r-2 border-gray-500">
+    <div className="flex flex-row w-full h-full overflow-auto">
+        <div className="Sidebar flex flex-col w-1/6 bg-gray-700 text-center border-r-2 border-gray-500">
             <h2 className="text-xl font-extralight text-gray-400 self-center m-2">Connected Users</h2>
                     
             <div className="h-8/10 w-full px-2 overflow-x-hidden overflow-y-auto">
-            <ConnectedUser key={socket.current.id} name={name}/>
-                {users.map((user) => (
-                    <ConnectedUser key={user.socketId} name={user.name}/>
-                ))}
+            <ConnectedUser key={socket.current.id} name={name} />
+                { Object.keys(users).filter((socketId) => socketId !== socket.current.id).map((socketId) => {
+                    return (
+                        <ConnectedUser 
+                        key={socketId} 
+                        name={users[socketId]} />
+                    )
+                })
+                }
             </div>
 
             <div className="flex flex-col h-fit py-2 align-center border-t-2 border-gray-600">
@@ -172,6 +173,7 @@ const CodeRoomPage = () => {
             isCollaborative={true} 
             socket={socket}
         />
+        <IOTerminal code={code} language={roomLanguage} />
     </div>
     )}
     </div>

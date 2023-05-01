@@ -6,10 +6,11 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/python/python';
 import 'codemirror/theme/tomorrow-night-eighties.css';
 import 'codemirror/addon/edit/closebrackets';
-import SampleCode from "../assets/SampleCode.js";
+import SampleCode from "../utils/SampleCode.js";
+import IOTerminal from "./IOTerminal";
 
 
-const CodeEditor = ({ language, code, setCode, isCollaborative, socket }) => {
+const CodeEditor = ({ language, code, setCode, isCollaborative, socket, useSampleCode }) => {
 
     const editor=useRef(null);
 
@@ -81,7 +82,7 @@ const CodeEditor = ({ language, code, setCode, isCollaborative, socket }) => {
                 break;
         }
         editor.current.setOption('mode',languageMode);
-        editor.current.setValue( isCollaborative ? code : SampleCode[language] );
+        editor.current.setValue( useSampleCode ? SampleCode[language] : code );
     }, [language]);
 
     return <textarea id="editor"></textarea>

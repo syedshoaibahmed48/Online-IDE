@@ -59,3 +59,4 @@ MongoDB commands:
 3. **show collections** - to show all collections in a database
 4. **db.users.updateOne({_id : ObjectId('2313216556454')}, {$set : {"userProjects": []}})** - to clear userProjects array in users collection
 5. **db.users.updateOne({_id : ObjectId('2313216556454')}, {$set : {"collabProjects": []}})** - to clear collabProjects array in users collection
+6.**db.projects.deleteMany({})** - to delete all documents in a collection

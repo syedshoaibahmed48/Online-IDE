@@ -3,24 +3,27 @@ const isNewRoom = (rooms, roomId) => {
 }
 
 const addUserToRoom = (rooms, roomId, name, socketId, language) => { // add user to room
-    const room = isNewRoom(rooms, roomId) ? {users:[], language, code:''} : rooms.get(roomId);
-    room.users.push({name, socketId});
+    const room = isNewRoom(rooms, roomId) ? {users:{}, language, code:''} : rooms.get(roomId);
+    room.users[socketId] = name;
     rooms.set(roomId, room);
+    console.log(room)
 }
 
 const removeUserFromRoom = (rooms, roomId, socketId) => { // remove user from room and delete room if no users left
     const room = rooms.get(roomId);
-    room.users = room.users.filter(user => user.socketId !== socketId);
-    room.users.length === 0 ? rooms.delete(roomId) : rooms.set(roomId, room);
+    if(!room) return;
+    delete room.users[socketId];
+    if (Object.keys(room.users).length === 0) rooms.delete(roomId);
+    console.log(rooms)
 }
 
 const getRoomId = (rooms, socketId) => { // returns roomId of the socketId if exists
     let roomId = null;
     rooms.forEach((room, Id) => {
-      if (room.users.some(user => user.socketId === socketId)) {
-        roomId = Id;
-        return;
-      }
+        if (Object.keys(room.users).includes(socketId)) {
+            roomId = Id;
+            return;
+        }
     });
     return roomId;
 }
@@ -28,8 +31,8 @@ const getRoomId = (rooms, socketId) => { // returns roomId of the socketId if ex
 const getName = (rooms, socketId) => { // returns name of the socketId 
     let name = null;
     rooms.forEach((room, Id) => {
-        if (room.users.some(user => user.socketId === socketId)) {
-            name = room.users.find(user => user.socketId === socketId).name;
+        if (Object.keys(room.users).includes(socketId)) {
+            name = room.users[socketId];
             return;
         }
     });

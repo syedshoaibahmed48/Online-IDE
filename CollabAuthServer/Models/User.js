@@ -17,12 +17,14 @@ const userSchema = new Schema({
         required: true,
     },
     userProjects: {
-        type: Array,
-        default: [],
+        type: Map,
+        of: Object,
+        default: {},
     },
     collabProjects: {
-        type: Array,
-        default: [],
+        type: Map,
+        of: Object,
+        default: {},
     },
 });
 

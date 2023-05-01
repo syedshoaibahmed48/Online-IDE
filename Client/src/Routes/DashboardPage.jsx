@@ -14,8 +14,8 @@ const DashboardPage = () => {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [userProjects, setUserProjects] = useState([]);
-    const [collabProjects, setCollabProjects] = useState([]);
+    const [userProjects, setUserProjects] = useState({});
+    const [collabProjects, setCollabProjects] = useState({});
 
     const getUserDetails = async () => {
         const token = localStorage.getItem("token");
@@ -39,7 +39,7 @@ const DashboardPage = () => {
             } catch (error) {
                 showToast("error", "Error connecting to server");
                 setTimeout(() => {
-                    navigate("/auth");
+                    navigate("/");
                 }, 2000);
             }
         } else {
@@ -59,19 +59,27 @@ const DashboardPage = () => {
 
         if(name==="") return;
 
-        let project = {
-            name: name,
-            language: language,
-            isCollaborative: isCollaborative
-        }
 
-        try{
-            const response = await axios.post(import.meta.env.VITE_NEW_PROJECT_API, project, {
-                headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        try {
+            const response = await axios.post(import.meta.env.VITE_NEW_PROJECT_API, 
+                { name, language, isCollaborative }, 
+                { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
             });
+
             if(response.data.success === true) {
-                project.id = response.data.projectId;
-                isCollaborative ? setCollabProjects([...collabProjects, project]):setUserProjects([...userProjects, project]);
+                const projectId = response.data.projectId;
+
+                const newProject = {
+                    [projectId]: {
+                        name: name,
+                        language: language,
+                        isCollaborative: isCollaborative,
+                    }
+                }
+
+                isCollaborative ? setCollabProjects({...collabProjects, ...newProject}) : setUserProjects({...userProjects, ...newProject});
+
+                showToast("success", "Project created successfully");
                 setShowModal(false);
             } else {
                 showToast("error", "Error creating project");
@@ -80,7 +88,6 @@ const DashboardPage = () => {
             showToast("error", "Error connecting to server");
         }
     }
-
 
     useEffect(() => {
         getUserDetails();
@@ -119,19 +126,18 @@ const DashboardPage = () => {
                     <div className="flex flex-row flex-wrap items-center w-full overflow-x-auto overflow-y-auto">
                     { loading ? ( <h1 className="text-2xl m-2 text-white">Loading...</h1>) : (
                         <>
-                        {userProjects.map((project) => {
-                            return ( 
-                                <ProjectDetails 
-                                key={project.id}
-                                id={project.id}
-                                name={project.name} 
-                                language= {project.language}
-                                isCollaborative={project.isCollaborative}
-                                /> 
-                            );
-                        })}
+                        {Object.keys(userProjects).map((key) => (
+                            <ProjectDetails 
+                                key={key}
+                                id={key}
+                                name={userProjects[key].name}
+                                language={userProjects[key].language}
+                                isCollaborative={false}    
+                            />
+                        ))}
                         </>
-                    )}
+                        )
+                    }
                     </div>
                     
                 </div>
@@ -143,17 +149,15 @@ const DashboardPage = () => {
                     <div className="flex flex-row flex-wrap items-center w-full overflow-x-auto overflow-y-auto">
                     { loading ? ( <h1 className="text-2xl m-2 text-white">Loading...</h1> ) : (
                         <>
-                        {collabProjects.map((project) => {
-                            return (
-                                <ProjectDetails
-                                key={project.id}
-                                id={project.id}
-                                name={project.name} 
-                                language= {project.language}
-                                isCollaborative={project.isCollaborative}
-                                />
-                            );
-                        })}
+                        {Object.keys(collabProjects).map((key) => (
+                            <ProjectDetails 
+                                key={key}
+                                id={key}
+                                name={collabProjects[key].name}
+                                language={collabProjects[key].language}
+                                isCollaborative={true}    
+                            />
+                        ))}
                         </>
                     )}
                     </div>
