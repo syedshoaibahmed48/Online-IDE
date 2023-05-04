@@ -48,6 +48,12 @@ const CollabProjectPage = () => {
 
     const handleUserConnect = (name, connectedUsers) => {
         setConnectedUsers(connectedUsers);
+        // if name is not in users, then it is a new user
+        if(!users[name]) {
+            // get key of user from connectedUsers and add it to users with name as value
+            const key = Object.keys(connectedUsers).find(key => connectedUsers[key] === name);
+            setUsers({...users, key: name});
+        }
         if(!document.hidden) showToast('user-connected', `👋 ${name} joined the room`);
     }
 

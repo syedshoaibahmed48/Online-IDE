@@ -7,7 +7,7 @@ const NewProjectModal = ({ showModal, setShowModal, createProject }) => {
 
     const [language, setLanguage] = useState("c"); 
     const [projectName, setProjectName] = useState("");
-    const [projectID, setProjectID] = useState(""); 
+    const [projectURL, setProjectURL] = useState(""); 
     const [isCollaborative, setIsCollaborative] = useState(false);
     const [formType, setFormType] = useState("create"); // ["create", "join"]
 
@@ -25,8 +25,11 @@ const NewProjectModal = ({ showModal, setShowModal, createProject }) => {
     }
 
     const handleJoinProject = () => {
-        if( projectID === ""  ) return;
+        if( projectURL === "" ) return;
+        const url = new URL(projectURL);
+        const projectID = url.pathname.split("/")[2];
         navigate(`/collabproject/${projectID}`);
+        setProjectURL("");
     }
 
     return (
@@ -76,8 +79,8 @@ const NewProjectModal = ({ showModal, setShowModal, createProject }) => {
                             </div>
                             </>
                                 ) : (
-                                    <input type="text" placeholder="Project ID" className="bg-gray-800 text-white rounded-md w-full p-2 mb-4"
-                                        value={projectID} onChange={(e) => setProjectID(e.target.value)}
+                                    <input type="text" placeholder="Project URL" className="bg-gray-800 text-white rounded-md w-full p-2 mb-4"
+                                        value={projectURL} onChange={(e) => setProjectURL(e.target.value)}
                                     />
                                 )
                             }

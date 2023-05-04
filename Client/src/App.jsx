@@ -9,6 +9,8 @@ import AuthPage from './Routes/AuthPage';
 import DashboardPage from './Routes/DashboardPage';
 import ProjectPage from './Routes/ProjectPage';
 import CollabProjectPage from './Routes/CollabProjectPage';
+import AboutUsPage from './Routes/AboutUsPage';
+import ContactUsPage from './Routes/ContactUsPage';
 
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
         <Route path='/dashboard' element={<DashboardPage/>}/>
         <Route path='/project/:projectId' element={<ProjectPage/>}/>
         <Route path='/collabproject/:projectId' element={<CollabProjectPage/>}/>
+        <Route path='/aboutus' element={<AboutUsPage/>}/>
+        <Route path='/contactus' element={<ContactUsPage/>}/>
         <Route path="*" element={<Navigate to="/notfound" replace />} />
       </Routes>
     </BrowserRouter>
