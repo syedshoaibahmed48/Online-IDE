@@ -1,44 +1,57 @@
 import React, { useEffect, useState } from "react";
-import CodeEditor  from "../Components/CodeEditor";
+import { useLocation } from "react-router-dom";
+import CodeEditor from "../Components/CodeEditor";
 import IOTerminal from "../Components/IOTerminal";
 import Dropdown from "../Components/Dropdown";
 
+const CodeLabPage = () => {
 
-const CodeLabPage = () =>{
+  const location = useLocation();
+  const { initialLanguage } = location.state || { initialLanguage: "c" };
 
   const [code, setCode] = useState("");
-  const [language, setLanguage] = useState('c');
+  const [language, setLanguage] = useState(initialLanguage);
 
   useEffect(() => {
     document.title = "CodeLab";
+    console.log()
     return () => {
       document.title = "Online IDE";
     };
   }, []);
 
   return (
-    <div className='flex flex-col h-screen bg-zinc-700 text-white'>
+    <div className="flex flex-col h-screen bg-zinc-700 text-white">
       <nav className="flex items-center justify-between flex-wrap bg-zinc-800 p-3">
-        <div className="flex flex-shrink-0  mr-6">
-          <h1 className="text-4xl font-bold text-white">CodeLab</h1>
+        <div className="flex flex-shrink-0 ">
+          <a href="/">
+            <img
+              className="object-cover object-center rounded w-9 hover:w-10 "
+              alt="hero"
+              src={new URL(`../assets/arrow.png`, import.meta.url)}
+            />
+          </a>
+          <h1 className="text-4xl font-bold text-white ml-6">CodeLab</h1>
         </div>
 
         <div className="flex flex-row">
-          <Dropdown language={language} setLanguage={setLanguage}/>
+          <Dropdown language={language} setLanguage={setLanguage} />
         </div>
       </nav>
 
-
       <div className="flex flex-col flex-grow w-full h-full overflow-auto">
         <div className="ProjectPage h-full w-full">
-          <CodeEditor code={code} setCode={setCode} language={language} useSampleCode={true}/>
+          <CodeEditor
+            code={code}
+            setCode={setCode}
+            language={language}
+            useSampleCode={true}
+          />
         </div>
-        <IOTerminal code={code} language={language}/>
+        <IOTerminal code={code} language={language} />
       </div>
-  
-
-      </div>
+    </div>
   );
-}
+};
 
 export default CodeLabPage;
