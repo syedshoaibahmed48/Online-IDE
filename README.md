@@ -1,62 +1,40 @@
-# Online_IDE
-An Online real-time collaborative IDE.
+# Online IDE - Collaborative Code Editor and Execution Platform
 
-## Installation and Execution Instructions
-### Step-1: Installing runtime environments and other tools
-#### 1.Install 
-  * git - https://www.youtube.com/watch?v=cJTXh7g-uCM     
-  * gcc compiler-https://www.youtube.com/watch?v=WWTocqPrzMk     
-  * jdk    
-  * nodejs     
-  * python    
-#### 2.set environment variables for above    
-#### 3.install MongoDB (with compass and shell)- https://www.youtube.com/watch?v=CK50OGxCtaM     
-#### 4.install redis -(tutorial) https://www.youtube.com/watch?v=nB7zi88DB1Y       
-(documentation)https://redis.io/docs/getting-started/installation/install-redis-on-windows/    
-    
-### Step-2: Cloning the project to local repository
-in vscode, open folder repos, open terminal and write below command     
-**git clone https://github.com/syedshoaibahmed48/Online_IDE.git**
-   
-     
-### Step-3: Installing node packages
-in vscode, open folder Online_IDE, open terminal and write below commands in sequence
-1. **cd client && npm install**
-2. **cd .. && cd codeexecstoreserver && npm install**
-3. **cd .. && cd collabauthserver && npm install**
+- The Online IDE is a powerful web-based platform designed to provide developers with a collaborative code editing and execution environment for multiple programming languages from a web browser.
+
+- Integrated real-time collaboration feature allowing multiple users to work on the same project simultaneously.
+
+- Implemented CRUD operations for user projects, allowing users to create, view, update, and delete their projects with the Node.js server efficiently managing project storage and retrieval from the MongoDB database.
+	
+- Utilized Redis as an in-memory database to implement a robust and scalable queue system using the Bull library, allowing for efficient management of multiple code execution tasks.
+
+- The Online IDE effectively utilizes a socket server for real-time collaboration and a REST API for code execution, user authentication, and project management, combining the strengths of both technologies to provide a seamless and efficient coding experience.
 
 
-### Step-4: Running the Application
+## Key Features
+- Real-time Collaboration: Collaborate with team members or colleagues in real-time, allowing multiple users to work on the same code simultaneously.
 
-#### <ins>1.Start redis server</ins>
-in cmd, enter below commands and enter password whenever needed    
-**wsl**     
-**sudo service redis-server start**    
+- Code Execution: Execute your code, supporting multiple programming languages and providing instant feedback on the output.
+Syntax Highlighting: Enjoy syntax highlighting to make your code more readable and visually appealing.
 
-(optional)     
-To access redis cli: **redis-cli**     
-To stop redis server **sudo service redis-server stop**   
-to empty redis db: **FLUSHDB**
-     
-        
-#### <ins>2.To run server and frontend</ins>
-in vscode, open folder Online_IDE, open two terminals    
-in terminal-1   
-**cd client && npm run dev**     
-in terminal-2    
-**cd codeexecstoreserver && npm run dev**   
-(to close) **CTRL+C**, and then **y** if prompted.    
-in terminal-3
-**cd collabauthserver && npm run dev** 
+- Project Management: Organize and manage your projects with ease, creating, updating, and deleting projects as needed.
 
-#### <ins>3.To view Database using MongoDB compass</ins>
-using mongodb compass connect to DB using below connection string     
-**mongodb://127.0.0.1/**
+- User Authentication: Ensure secure access to the platform through user authentication, protecting user accounts and project data.
 
-MongoDB commands:
-1. **show dbs** - to show all databases
-2. **use <db_name>** - to use a database
-3. **show collections** - to show all collections in a database
-4. **db.users.updateOne({_id : ObjectId('2313216556454')}, {$set : {"userProjects": []}})** - to clear userProjects array in users collection
-5. **db.users.updateOne({_id : ObjectId('2313216556454')}, {$set : {"collabProjects": []}})** - to clear collabProjects array in users collection
-6.**db.projects.deleteMany({})** - to delete all documents in a collection
+- Error Handling: Receive detailed error messages and diagnostics to identify and resolve coding issues quickly.
+
+## Technologies Used
+### Front-end:
+- React.js: A JavaScript library for building user interfaces.
+- Tailwind CSS: A utility-first CSS framework for quickly styling the application.
+- Axios: for making API requests to the server.
+- Socket.IO: to implement real-time collaboration between users.   
+      
+### Back-end:     
+
+- Node.js: A JavaScript runtime environment used for server-side development.
+- Express.js: A web application framework for creating RESTful APIs.
+- MongoDB: to store user and project data.
+- Mongoose: for modeling and mapping MongoDB data to JavaScript objects.
+- JWT (JSON Web Tokens): to authenticate users and protect routes.
+- Redis: An in-memory data store used for queuing and processing code execution requests.
