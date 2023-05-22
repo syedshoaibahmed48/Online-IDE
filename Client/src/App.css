@@ -12,12 +12,12 @@
   height: 43%;
 }
 
-.CodeRoom .CodeMirror{
+.CodeRoom .CodeMirror, .CollabProjectPage .CodeMirror{
   width: 100%;
   height: 95%;
 }
 
-.CodeRoom .Sidebar{
+.CodeRoom .Sidebar, .CollabProjectPage .Sidebar{
   height: 94%;
 }
 

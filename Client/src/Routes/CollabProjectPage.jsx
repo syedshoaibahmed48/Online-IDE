@@ -37,7 +37,9 @@ const CollabProjectPage = () => {
           setCode(code);
           setConnectedUsers(connectedUsers);
           setUsers(collaborators);
-          setLoading(false);
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
         } else {
           showToast("error", error);
           setTimeout(() => {
@@ -155,7 +157,7 @@ const CollabProjectPage = () => {
   }, []);
 
   return (
-    <div className="CodeRoom flex flex-col h-screen">
+    <div className="CollabProjectPage flex flex-col bg-gray-700 text-white h-screen overflow-auto">
       <Toast />
       <nav className="flex items-center justify-between flex-wrap bg-gray-800 ">
         <div className="flex flex-shrink-0 ml-4 mr-6">
@@ -201,11 +203,12 @@ const CollabProjectPage = () => {
       </nav>
 
       {loading ? (
-        <div className="flex justify-center items-center h-full bg-gray-700">
-          <h1 className="text-5xl font-extrabold text-white">Loading...</h1>
+        <div className="flex flex-col items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-white mb-6"></div>
+          <p className="text-2xl font-bold">Loading...</p>
         </div>
       ) : (
-        <div className="flex flex-row w-full h-full">
+        <div className="flex flex-row w-full h-full overflow-auto">
           <div className="Sidebar flex flex-col w-1/6 bg-gray-700 text-center border-r-2 border-gray-500">
             <h2 className="text-xl font-extralight text-gray-400 self-center m-2">
               Connected Users
