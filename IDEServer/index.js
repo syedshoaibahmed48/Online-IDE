@@ -62,8 +62,7 @@ app.get('/user-details', async (req, res) => { // get user details
             userid,
             username: user.username,
             email: user.email,
-            userProjects: user.userProjects,
-            collabProjects: user.collabProjects,
+            projects: user.projects,
         } });
     } else {
         res.json({ success: false, error: "Invalid token" });
@@ -75,14 +74,10 @@ app.post('/new-project', async (req, res) => { // create new project
     const token = req.headers.authorization.split(" ")[1];
     const decoded = verifyToken(token);
     const { userid, username } = decoded;
-    const { name, language, isCollaborative } = req.body;
-    const project = await Project.create({ name, language, isCollaborative, collaborators: { [userid]: username } });
+    const { name, language } = req.body;
+    const project = await Project.create({ name, language, collaborators: { [userid]: username } });
     const projectId = project._id;
-    if(isCollaborative) {
-        await User.updateOne({ userid, username }, { $set: { [`collabProjects.${projectId}`]: { name, language, isCollaborative } } });
-    } else {
-        await User.updateOne({ userid, username }, { $set: { [`userProjects.${projectId}`]: { name, language, isCollaborative } } });
-    }
+    await User.updateOne({ userid, username }, { $set: { [`projects.${projectId}`]: { name, language } } });
     console.log("Project created with name: " + name + " for user: " + userid);
     res.json({ success: true, projectId });
 });
@@ -121,11 +116,8 @@ app.post('/project-delete', async (req, res) => { // delete project
     const { projectId } = req.body;
     const project = await Project.findById(projectId);
 
-    if(project.isCollaborative) {// delete project from user 
-        await User.updateOne({ userid, username }, { $unset: { [`collabProjects.${projectId}`]: "" } });
-    } else {
-        await User.updateOne({ userid, username }, { $unset: { [`userProjects.${projectId}`]: "" } });
-    }
+    // delete project from user 
+    await User.updateOne({ userid, username }, { $unset: { [`projects.${projectId}`]: "" } });
 
     if(project.collaborators.size === 1) {// delete project if no collaborators, else remove user from collaborators
         await project.delete();
@@ -172,7 +164,7 @@ io.on('connection', (socket) => {
             return;
         } else if(!project.collaborators.has(userid)) {
             await Project.updateOne({ _id: projectId }, { $set: { [`collaborators.${userid}`]: username } });
-            await User.updateOne({ userid, username }, { $set: { [`collabProjects.${projectId}`]: { name: project.name, language: project.language, isCollaborative: true } } });
+            await User.updateOne({ userid, username }, { $set: { [`projects.${projectId}`]: { name: project.name, language: project.language } } });
         }
         const code = rooms.has(projectId) ? rooms.get(projectId).code : project.code;
         addUserToRoom(rooms, projectId, username, socket.id, project.language);

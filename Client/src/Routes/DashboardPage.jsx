@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ProjectDetails from "../Components/ProjectDetails";
 import NewProjectModal from "../Components/NewProjectModal";
+import LogoNameLink from "../Components/LogoNameLink";
 import { Toast, showToast } from "../Components/Toast";
+import "../App.css"
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -12,8 +14,7 @@ const DashboardPage = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [userProjects, setUserProjects] = useState({});
-  const [collabProjects, setCollabProjects] = useState({});
+  const [projects, setProjects] = useState({});
 
   const getUserDetails = async () => {
     const token = localStorage.getItem("token");
@@ -25,8 +26,7 @@ const DashboardPage = () => {
         if (response.data.success === true) {
           setUsername(response.data.user.username);
           setEmail(response.data.user.email);
-          setUserProjects(response.data.user.userProjects);
-          setCollabProjects(response.data.user.collabProjects);
+          setProjects(response.data.user.projects);
           setLoading(false);
         } else {
           showToast("error", "Please login to continue");
@@ -72,14 +72,11 @@ const DashboardPage = () => {
           [projectId]: {
             name: name,
             language: language,
-            isCollaborative: isCollaborative,
           },
         };
 
-        isCollaborative
-          ? setCollabProjects({ ...collabProjects, ...newProject })
-          : setUserProjects({ ...userProjects, ...newProject });
-
+        
+        setProjects({ ...projects, ...newProject });
         showToast("success", "Project created successfully");
         setShowModal(false);
       } else {
@@ -95,36 +92,41 @@ const DashboardPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-700 overflow-hidden">
-      <nav className="flex justify-between flex-wrap bg-gray-900 px-4 py-2">
+    <div className="flex flex-col h-screen overflow-hidden">
+      <nav className="flex justify-between flex-wrap bg-[#0b0f18] px-4 py-2 border-b border-cyan-500">
         <div className="flex flex-row ">
-          <a href="/">
-            <img
-              className="object-cover object-center rounded mt-4 w-9 hover:w-10 "
-              alt="hero"
-              src={new URL(`../assets/arrow.png`, import.meta.url)}
-            />
-          </a>
-          <div className=" ml-8 flex flex-col justify-center">
+          <LogoNameLink />
+          <div className="border-r-2 border-cyan-500 h-16 ml-2" />
+          <div className="flex flex-col ml-2 justify-center">
             <h1 className="text-3xl font-bold text-white mr-4">{username}</h1>
             <p className="text-white">{email}</p>
           </div>
         </div>
         <div className="flex flex-row justify-center">
-          <button
-            className="bg-emerald-500 hover:bg-green-600 text-white font-bold rounded-md px-4 py-2 m-2"
-            onClick={() => setShowModal(true)}
-          >
+          <button className="primaryButton" onClick={() => setShowModal(true)}>
             New Project
           </button>
-          <button
-            className="bg-emerald-500 hover:bg-green-600 text-white font-bold rounded-md px-4 py-2 m-2"
-            onClick={signout}
-          >
+          <button className="primaryButton ml-2"onClick={signout}>
             Logout
           </button>
         </div>
       </nav>
+
+      <div className="flex flex-col w-full h-full px-12 py-2 bg-[#111827] overflow-x-auto overflow-y-auto">
+        <h1 className="text-5xl font-extrabold self-center text-white text-center px-4 py-2 my-2 border-b-4 border-white">Projects</h1>
+        <div className="flex flex-row flex-wrap">
+        {
+          Object.keys(projects).map((key) => (
+                  <ProjectDetails
+                    key={key}
+                    id={key}
+                    name={projects[key].name}
+                    language={projects[key].language}
+                  />
+                ))
+        }
+        </div>
+      </div>
 
       <NewProjectModal
         showModal={showModal}
@@ -133,55 +135,7 @@ const DashboardPage = () => {
       />
       <Toast />
 
-      <div className="flex flex-col h-full">
-        <div className="flex flex-col h-1/2 w-full border-b-2 border-emerald-500  mr-4">
-          <div className="flex flex-row items-center justify-between w-full px-4 py-1 bg-gray-800">
-            <h1 className="text-lg font-bold text-white">My Projects</h1>
-          </div>
-          <div className="flex flex-row flex-wrap items-center w-full overflow-x-auto overflow-y-auto">
-            {loading ? (
-              <h1 className="text-2xl m-2 text-white">Loading...</h1>
-            ) : (
-              <>
-                {Object.keys(userProjects).map((key) => (
-                  <ProjectDetails
-                    key={key}
-                    id={key}
-                    name={userProjects[key].name}
-                    language={userProjects[key].language}
-                    isCollaborative={false}
-                  />
-                ))}
-              </>
-            )}
-          </div>
-        </div>
 
-        <div className="flex flex-col h-2/5 w-full">
-          <div className="flex flex-row items-center justify-between w-full px-4 py-1 bg-gray-800">
-            <h1 className="text-lg font-bold text-white">
-              Collaboration Projects
-            </h1>
-          </div>
-          <div className="flex flex-row flex-wrap items-center w-full overflow-x-auto overflow-y-auto">
-            {loading ? (
-              <h1 className="text-2xl m-2 text-white">Loading...</h1>
-            ) : (
-              <>
-                {Object.keys(collabProjects).map((key) => (
-                  <ProjectDetails
-                    key={key}
-                    id={key}
-                    name={collabProjects[key].name}
-                    language={collabProjects[key].language}
-                    isCollaborative={true}
-                  />
-                ))}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

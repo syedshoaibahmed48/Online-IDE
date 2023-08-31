@@ -12,14 +12,6 @@ const CodeLabPage = () => {
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState(initialLanguage);
 
-  useEffect(() => {
-    document.title = "CodeLab";
-    console.log()
-    return () => {
-      document.title = "Online IDE";
-    };
-  }, []);
-
   return (
     <div className="flex flex-col h-screen bg-zinc-700 text-white">
       <nav className="flex items-center justify-between flex-wrap bg-zinc-800 p-3">

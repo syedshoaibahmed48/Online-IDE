@@ -7,7 +7,6 @@ import 'codemirror/mode/python/python';
 import 'codemirror/theme/tomorrow-night-eighties.css';
 import 'codemirror/addon/edit/closebrackets';
 import SampleCode from "../utils/SampleCode.js";
-import IOTerminal from "./IOTerminal";
 
 
 const CodeEditor = ({ language, code, setCode, isCollaborative, socket, useSampleCode }) => {

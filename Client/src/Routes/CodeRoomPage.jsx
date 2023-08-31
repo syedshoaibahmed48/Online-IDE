@@ -5,6 +5,8 @@ import CodeEditor from "../Components/CodeEditor";
 import ConnectedUser from "../Components/ConnectedUser";
 import { Toast, showToast } from "../Components/Toast";
 import IOTerminal from "../Components/IOTerminal";
+import LogoNameLink from "../Components/LogoNameLink";
+import "../App.css";
 
 const CodeRoomPage = () => {
   const navigate = useNavigate();
@@ -122,30 +124,20 @@ const CodeRoomPage = () => {
   return (
     <div className="CodeRoom flex flex-col h-screen overflow-auto">
       <Toast />
-      <nav className="flex items-center justify-between flex-wrap bg-gray-800 p-3">
-        <div className="flex flex-shrink-0 ml-8 mr-6">
-          <a
-            href="/"
-            className="flex title-font font-normal items-center text-gray-900 mb-4 md:mb-0"
-          >
-            <img
-              src={new URL(`../assets/logo.png`, import.meta.url)}
-              className="w-36 "
-              alt="unavailable"
-            />
-          </a>
-        </div>
+      <nav className="flex justify-between flex-wrap bg-gray-900 border-b border-gray-400 px-4 py-2">
+        <LogoNameLink />
+        <img className="self-center h-10 w-10 mr-6" src={new URL(`../assets/${roomLanguage}.png`, import.meta.url)} alt="logo" />
       </nav>
 
       {loading ? (
-        <div className="flex justify-center items-center h-full bg-gray-700">
+        <div className="flex justify-center items-center h-full bg-gray-800">
           {!roomLanguage ? ( // if user joins using URL show enter name form
-            <div className="flex flex-col items-center justify-center border-t-2 border-teal-400 p-10 bg-gray-800 rounded-md">
+            <div className="flex flex-col items-center justify-center border-t-2 border-cyan-400 p-10 bg-gray-900 rounded-md">
               <h1 className="text-4xl text-white font-bold">
                 Enter your name:
               </h1>
               <input
-                className="w-full h-12 mt-5 p-2 rounded-lg font-bold border-4 border-gray-400"
+                className="w-full h-12 mt-5 p-2 rounded-lg font-bold border-4 focus:outline-none focus:border-cyan-400"
                 type="text"
                 placeholder="Enter your name"
                 value={name}
@@ -153,10 +145,7 @@ const CodeRoomPage = () => {
                   setName(e.target.value);
                 }}
               />
-              <button
-                className="w-full mt-5 bg-gray-600 hover:bg-gray-500 text-2xl text-white font-bold py-2 px-4 rounded-lg"
-                onClick={joinRoom}
-              >
+              <button className="primaryButton text-2xl w-full mt-5" onClick={joinRoom}>
                 Join Room
               </button>
             </div>
@@ -166,7 +155,7 @@ const CodeRoomPage = () => {
         </div>
       ) : (
         <div className="flex flex-row w-full h-full overflow-auto">
-          <div className="Sidebar flex flex-col w-1/6 bg-gray-700 text-center border-r-2 border-gray-500">
+          <div className="Sidebar flex flex-col w-1/6 bg-gray-900 text-center border-r-2 border-gray-400">
             <h2 className="text-xl font-extralight text-gray-400 self-center m-2">
               Connected Users
             </h2>

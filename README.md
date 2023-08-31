@@ -32,3 +32,23 @@
 - **Mongoose**: for modeling and mapping MongoDB data to JavaScript objects.
 - **JWT (JSON Web Tokens)**: to authenticate users and protect routes.
 - **Redis**: An in-memory data store used for queuing and processing code execution requests.
+
+
+Key Contributions:
+
+Introduction of a web-based IDE for real-time collaborative coding.
+Support for multiple programming languages and code execution.
+Cloud-based storage for code projects.
+Implementation of security measures and a user-friendly interface.
+Scalability and performance optimization for a substantial user base.
+
+Future Enhancements:
+
+Expanding language support.
+Advanced code analysis and debugging tools.
+Intelligent code completion using AI.
+Integration with version control systems.
+Enhanced collaboration tools, including video conferencing and inline commenting.
+Mobile and tablet optimization with a cross-platform application.
+Integration with cloud services for deployment.
+Implementation of a robust sandboxing system for code execution.

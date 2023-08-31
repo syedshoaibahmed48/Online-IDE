@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Toast, showToast } from "../Components/Toast";
+import LogoNameLink from "../Components/LogoNameLink";
+import "../App.css";
 
 const AuthPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const { action } = location.state ? location.state : { action: "signin" };
-
-  const [formType, setFormType] = useState(action); // signin or signup
+  const [formType, setFormType] = useState("signin"); // signin or signup
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -102,7 +101,7 @@ const AuthPage = () => {
         showToast(
           "success",
           "Successfully " + (formType === "signin" ? "signed-in" : "signed-up")
-        ); // remove if not required
+        );
         setTimeout(() => {
           navigate("/dashboard");
         }, 1000);
@@ -114,140 +113,89 @@ const AuthPage = () => {
     }
   };
 
-  const selectedButtonStyle =
-    "h-10 w-36 bg-[#e0195bff] hover:bg-green-600 flex flex-wrap items-center text-lg text-white justify-center";
-  const unSelectedButtonStyle =
-    "h-10 w-36 bg-[#120013ff] hover:bg-gray-900 flex flex-wrap items-center text-lg font-normal border-2 border-[#e0195bff] text-white justify-center";
-
   return (
-    <div className="flex flex-col">
-      <Toast />
-      <header className="sticky top-0 bg-[#210423ff]">
-        <div className="container mx-auto flex flex-wrap p-0.25 flex-col md:flex-row items-center">
-          <div className="ml-24 mt-2 mb-2 w-48 ">
-            <a
-              href="/"
-              className="flex title-font font-normal items-center text-gray-900 mb-4 md:mb-0"
-            >
-              <img
-                src={new URL(`../assets/logo.png`, import.meta.url)}
-                alt="unavailable"
-              />
-            </a>
-          </div>
-          <nav className="md:ml-auto md:mr-20 flex space-x-20 flex-wrap items-center text-xl justify-center">
-            <button
-              className={
-                formType === "signin"
-                  ? selectedButtonStyle
-                  : unSelectedButtonStyle
-              }
-              onClick={() => {
-                changeFormType("signin");
-              }}
-            >
-              Login
-            </button>
-            <button
-              className={
-                formType === "signin"
-                  ? unSelectedButtonStyle
-                  : selectedButtonStyle
-              }
-              onClick={() => {
-                changeFormType("signup");
-              }}
-            >
-              SignUp
-            </button>
-          </nav>
+    <div className="flex flex-col items-center min-h-screen gradientBackground text-white">
+      <nav className="flex items-center justify-between w-full px-6 py-4 mb-10">
+        <LogoNameLink />
+        <div className="flex items-center space-x-4">
+          <button className={formType === "signin" ? "selectedButton": "unSelectedButton"} onClick={() => changeFormType("signin")}>
+            Sign In
+          </button>
+          <button className={formType === "signup" ? "selectedButton" : "unSelectedButton"} onClick={() => changeFormType("signup")}>
+            Sign Up
+          </button>
         </div>
-      </header>
-      <div className="bg-[#120013ff] py-20">
-        <section className="ml-20 text-gray-600 body-font">
-          <div className="container mx-auto flex px-5 md:flex-row flex-col items-center">
-            <div className=" mx-28 lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0">
-              <img
-                className="object-cover object-center rounded"
-                alt="hero"
-                src={new URL(`../assets/authpagegif.gif`, import.meta.url)}
+      </nav>
+      <div className="flex flex-col items-center justify-center h-full px-4 mb-10">
+        <div className="flex flex-col px-10 py-16 items-center justify-center w-full border-t-2 border-cyan-400 bg-[#111827] rounded-lg">
+          <h1 className="mb-10 text-4xl font-extrabold leading-none tracking-tight max-w-2xl">
+            {formType === "signin" ? "Sign In" : "Sign Up"}
+          </h1>
+          <div className="flex flex-col items-center justify-center w-full mb-4">
+            <input
+              type="text"
+              placeholder="Username"
+              className="w-full h-10 px-4 mb-4 text-lg text-white placeholder-gray-400 bg-transparent border-2 border-gray-400 rounded-lg focus:outline-none focus:border-cyan-600"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            {formType === "signup" && (
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full h-10 px-4 mb-4 text-lg text-white placeholder-gray-400 bg-transparent border-2 border-gray-400 rounded-lg focus:outline-none focus:border-cyan-600"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
+            )}
+            <div className="relative w-full">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                className="w-full h-10 px-4 mb-4 text-lg text-white placeholder-gray-400 bg-transparent border-2 border-gray-400 rounded-lg focus:outline-none focus:border-cyan-600"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button className="absolute right-2 -top-2 h-full text-center text-gray-400 hover:text-white" onClick={() => setShowPassword(!showPassword)}>
+                {
+                  showPassword ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16"> 
+                      <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>  
+                      <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/> 
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16"> <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/> <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/> <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/> </svg>
+                  )
+                }
+              </button>
             </div>
-            <section className="text-gray-600 body-font">
-              <div className="flex flex-col items-center justify-center border-t-2 border-[#e0195bff] w-80 px-8 py-16 bg-gray-900 rounded-md">
-                <div className="flex flex-col items-center justify-center w-full">
-                  <h1 className="text-4xl font-black text-white">
-                    {formType === "signin" ? "Login" : "Signup"}
-                  </h1>
-                  <div className="flex flex-col items-center justify-center w-full my-6">
-                    <input
-                      type="text"
-                      className="bg-gray-800 text-white rounded-md w-full p-2 mb-4"
-                      value={username}
-                      onChange={(e) => {
-                        setUsername(e.target.value);
-                      }}
-                      placeholder="Username"
-                    />
-
-                    {formType === "signup" && (
-                      <input
-                        type="email"
-                        className="bg-gray-800 text-white rounded-md w-full p-2 mb-4"
-                        value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                        }}
-                        placeholder="Email"
-                      />
-                    )}
-
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      className="bg-gray-800 text-white rounded-md w-full p-2 mb-4"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                      }}
-                      placeholder="Password"
-                    />
-
-                    {formType === "signup" && (
-                      <input
-                        type="password"
-                        className="bg-gray-800 text-white rounded-md w-full p-2 mb-4"
-                        value={confirmPassword}
-                        onChange={(e) => {
-                          setConfirmPassword(e.target.value);
-                        }}
-                        placeholder="Confirm Password"
-                      />
-                    )}
-
-                    <div className="flex flex-row items-center justify-start w-full">
-                      <p className="text-white text-sm mr-2">Show Password</p>
-                      <input
-                        type="checkbox"
-                        className="cursor-pointer"
-                        checked={showPassword}
-                        onChange={() => {
-                          setShowPassword(!showPassword);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <button
-                    className="bg-[#e0195bff] hover:bg-green-600 text-white font-black rounded-md w-full px-4 py-2 m-2"
-                    onClick={handleSubmit}
-                  >
-                    {formType === "signin" ? "Login" : "Signup"}
-                  </button>
-                </div>
+            {formType === "signup" && (
+              <div className="relative w-full">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  className="w-full h-10 px-4 mb-4 text-lg text-white placeholder-gray-400 bg-transparent border-2 border-gray-400 rounded-lg focus:outline-none focus:border-cyan-600"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <button className="absolute right-2 -top-2 h-full text-center text-gray-400 hover:text-white" onClick={() => setShowPassword(!showPassword)}>
+                {
+                  showPassword ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16"> <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/> <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/> </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16"> <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/> <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/> <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/> </svg>
+                  )
+                }
+                </button>
               </div>
-            </section>
+            )}
           </div>
-        </section>
+          <button className="gradientButton" onClick={handleSubmit}>
+            {formType === "signin" ? "Sign In" : "Sign Up"}
+          </button>
+        </div>
       </div>
+      <Toast />
     </div>
   );
 };

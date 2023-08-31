@@ -8,7 +8,6 @@ const NewProjectModal = ({ showModal, setShowModal, createProject }) => {
     const [language, setLanguage] = useState("c"); 
     const [projectName, setProjectName] = useState("");
     const [projectURL, setProjectURL] = useState(""); 
-    const [isCollaborative, setIsCollaborative] = useState(false);
     const [formType, setFormType] = useState("create"); // ["create", "join"]
 
     const handleSubmit = () => {
@@ -18,17 +17,16 @@ const NewProjectModal = ({ showModal, setShowModal, createProject }) => {
 
     const handleCreateProject = () => {
         if( projectName === ""  ) return;
-        createProject(projectName, language, isCollaborative);
+        createProject(projectName, language);
         setProjectName("");
         setLanguage("c");
-        setIsCollaborative(false);
     }
 
     const handleJoinProject = () => {
         if( projectURL === "" ) return;
         const url = new URL(projectURL);
         const projectID = url.pathname.split("/")[2];
-        navigate(`/collabproject/${projectID}`);
+        navigate(`/project/${projectID}`);
         setProjectURL("");
     }
 
@@ -36,12 +34,12 @@ const NewProjectModal = ({ showModal, setShowModal, createProject }) => {
         <div className={`fixed z-10 inset-0 overflow-y-auto ${showModal ? "block" : "hidden"}`}>
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-                    <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                    <div className="absolute inset-0 bg-black/20 opacity-75"></div>
                 </div>
                 <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
                 
-                <div className="inline-block align-bottom bg-gray-700 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                    <div className="bg-gray-700 text-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="inline-block align-bottom bg-[#0b0f18] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                    <div className="bg-gray-900 text-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     
                     <div className="flex flex-row h-10 rounded bg-gray-600">
                         <div className={"flex h-full w-1/2 py-2 cursor-pointer justify-center items-center "+ (formType === "create" && "bg-gray-800") }>
@@ -73,10 +71,6 @@ const NewProjectModal = ({ showModal, setShowModal, createProject }) => {
                                 <option value="js">JavaScript</option>
                                 <option value="py">Python</option>
                             </select>
-                            <div className="flex items-center">
-                                <input type="checkbox" className="mr-2" checked={isCollaborative} onChange={(e) => setIsCollaborative(e.target.checked)} />
-                                <label>Collaborative</label>
-                            </div>
                             </>
                                 ) : (
                                     <input type="text" placeholder="Project URL" className="bg-gray-800 text-white rounded-md w-full p-2 mb-4"

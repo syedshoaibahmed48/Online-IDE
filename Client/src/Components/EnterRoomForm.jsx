@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidV4 } from "uuid";
 import Dropdown from "./Dropdown";
 import { Toast, showToast } from "./Toast";
+import '../App.css'
 
 const EnterRoomForm = ({ closemodal }) => {
   const navigate = useNavigate();
@@ -33,53 +34,33 @@ const EnterRoomForm = ({ closemodal }) => {
     setUUID(uuidV4());
   }, []);
 
+
   return (
-    <div className="relative flex flex-col items-center justify-center  px-14  py-10 mt-4 bg-gray-800 border-t-2 border-cyan-400">
+    <div className="relative flex flex-col items-center justify-center  px-14  py-16 mt-4 bg-[#111827] border-t-2 border-cyan-500 rounded-lg">
       <Toast />
-      <button
-        class="absolute top-0 right-0 m-3  hover:m-2.5 "
-        onClick={() => closemodal(false)}
-      >
+      <button className="absolute top-0 right-0 m-3 hover:m-2.5 " onClick={() => closemodal(false)}>
         <img
           src={new URL(`../assets/cross.png`, import.meta.url)}
           className="w-5 hover:w-6"
           alt="unavailable"
         />
       </button>
-      <div className="inline-flex mt-6 mb-8">
-        <button
-          className={
-            "font-bold py-2 px-4" +
-            (formType === "create"
-              ? " text-cyan-400 bg-gray-500"
-              : " text-gray-400 bg-gray-900")
-          }
-          onClick={() => {
-            changeFormType("create");
-          }}
-        >
+      <div className="inline-flex w-full mt-6 mb-8">
+        <button className= {formType === "create" ? "selectedButton" : "unSelectedButton"}
+          onClick={() => {changeFormType("create");}}>
           Create a Room
         </button>
-        <button
-          className={
-            "font-bold py-2 px-4" +
-            (formType === "join"
-              ? " text-cyan-400 bg-gray-500"
-              : " text-gray-400 bg-gray-900")
-          }
-          onClick={() => {
-            changeFormType("join");
-          }}
-        >
+        <button className= {formType === "join" ? "selectedButton" : "unSelectedButton"}
+          onClick={() => {changeFormType("join");}}>
           Join a Room
         </button>
       </div>
 
-      <div className="flex flex-col items-center justify-center w-full">
+      <div className="flex flex-col items-center justify-center w-full text-black">
         <input
           type="text"
           placeholder="Enter Room ID"
-          className="font-semibold w-full border-2 border-black rounded-md p-2 m-4"
+          className="w-full h-12 px-4 m-4 text-lg text-white placeholder-gray-400 bg-transparent border-2 border-gray-400 rounded-lg focus:outline-none focus:border-cyan-600"
           value={roomID}
           onChange={(e) => {
             setRoomID(e.target.value);
@@ -88,23 +69,18 @@ const EnterRoomForm = ({ closemodal }) => {
         />
         <input
           type="text"
-          placeholder="Enter Name"
-          className="font-semibold w-full border-2 border-black rounded-md p-2 m-4"
+          placeholder="Enter your Name"
+          className="w-full h-12 px-4 m-4 text-lg text-white placeholder-gray-400 bg-transparent border-2 border-gray-400 rounded-lg focus:outline-none focus:border-cyan-600"
           value={name}
           onChange={(e) => {
             setName(e.target.value);
           }}
         />
-        <div
-          className={
-            "flex flex-row items-center w-full mt-8" +
-            (formType === "create" ? " justify-between" : " justify-center")
+        <div className={"flex flex-row items-center w-full mt-8 " +
+            (formType === "create" ? " justify-around" : " justify-center")
           }
         >
-          <button
-            className="font-semibold rounded-md p-2 bg-gray-600 hover:bg-gray-500 text-white "
-            onClick={navigateToRoom}
-          >
+          <button className="gradientButton px-2" onClick={navigateToRoom}>
             {formType === "create" ? "Create Room" : "Join Room"}
           </button>
           {formType === "create" && (

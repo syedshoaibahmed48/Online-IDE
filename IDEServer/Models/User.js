@@ -16,12 +16,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    userProjects: {
-        type: Map,
-        of: Object,
-        default: {},
-    },
-    collabProjects: {
+    projects: {
         type: Map,
         of: Object,
         default: {},

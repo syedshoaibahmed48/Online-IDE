@@ -10,10 +10,6 @@ const ProjectSchema=mongoose.Schema({
         required:true,
         enum:['c', 'cpp', 'java', 'js', 'py'],
     },
-    isCollaborative:{
-        type:Boolean,
-        required:true
-    },
     collaborators:{//map of userids to name
         type: Map,
         of: String

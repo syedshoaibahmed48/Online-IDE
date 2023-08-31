@@ -28,7 +28,7 @@ const Dropdown = ({language, setLanguage}) => {
 
     const Option = ({option, language}) => { //display option in dropdown menu
         return( 
-        <div className="flex flex-row px-2 py-2 text-sm text-white hover:bg-zinc-900" 
+        <div className="flex flex-row px-2 py-2 text-sm text-white hover:bg-[#111827]" 
         onClick={(e)=>{ setOption(e.target.innerText); setLanguage(language); closeOptions()}}>
             <img className="w-6 h-6 mr-2" src={ new URL (`../assets/${language}.png`, import.meta.url)} alt='logo' />
             <span className="self-center">{option}</span>
@@ -49,7 +49,7 @@ const Dropdown = ({language, setLanguage}) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
             </svg>
         </button>
-        <div id="options" className="absolute w-36 z-20 mt-12 bg-zinc-800 rounded-md shadow-lg px-1 py-2" style={{display: "none"}}>
+        <div id="options" className="absolute w-36 z-20 mt-12 bg-[#0b0f18] rounded-md shadow-lg px-1 py-2" style={{display: "none"}}>
                 <Option option="C" language="c"/>
                 <Option option="C++" language="cpp"/>
                 <Option option="Java" language="java"/>

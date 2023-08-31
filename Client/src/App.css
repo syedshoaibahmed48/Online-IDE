@@ -1,3 +1,31 @@
+.gradientText{
+  @apply bg-gradient-to-r from-cyan-400 to-blue-600 text-transparent bg-clip-text;
+}
+
+.gradientBackground{
+  @apply bg-gradient-to-br from-[#0c0c1e] via-gray-800 to-gray-900
+}
+
+.gradientButton{
+  @apply px-6 py-4 bg-gradient-to-r whitespace-nowrap from-cyan-600 to-blue-600 rounded-lg text-white font-semibold shadow-lg hover:opacity-90
+}
+
+.primaryButton{
+  @apply px-4 py-2 h-12 self-center bg-cyan-600 rounded-lg text-white font-semibold shadow-lg hover:opacity-90
+}
+
+.outlineButton{
+  @apply px-4 py-2 bg-transparent border-2 border-cyan-400 rounded-lg text-cyan-400 font-semibold shadow-lg hover:bg-gray-900;
+}
+
+.selectedButton{
+  @apply h-10 w-36 bg-cyan-600 flex flex-wrap items-center text-base font-bold border border-cyan-600 text-white justify-center;
+}
+
+.unSelectedButton{
+  @apply h-10 w-36 bg-cyan-900 flex flex-wrap items-center text-base font-bold text-white justify-center hover:bg-cyan-700 hover:border-cyan-700;
+}
+
 .CodeMirror{
   font-size: 18px;
 }
@@ -12,17 +40,12 @@
   height: 43%;
 }
 
-.CodeRoom .CodeMirror, .CollabProjectPage .CodeMirror{
+.CodeRoom .CodeMirror, .ProjectPage .CodeMirror{
   width: 100%;
   height: 95%;
 }
 
-.CodeRoom .Sidebar, .CollabProjectPage .Sidebar{
-  height: 94%;
-}
-
-.ProjectPage .CodeMirror{
-  width: 100%;
+.CodeRoom .Sidebar, .ProjectPage .Sidebar{
   height: 94%;
 }
 
@@ -41,6 +64,7 @@
 .remote-cursor span {
   margin-left: -5px;
   position: absolute;
+  color: cyan;
 }
 
 .remote-cursor .userName {
@@ -49,6 +73,5 @@
   font-weight: bold;
   margin-top: -10px;
   padding-inline: 4px;
-  color: black;
-  background-color: white;
+  color: cyan;
 }
